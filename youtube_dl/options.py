@@ -151,6 +151,10 @@ def parseOpts(overrideArguments=None):
         action='store_true', dest='list_extractor_descriptions', default=False,
         help='Output descriptions of all supported extractors')
     general.add_option(
+        '--force-generic-extractor',
+        action='store_true', dest='force_generic_extractor', default=False,
+        help='Force extraction to use the generic extractor')
+    general.add_option(
         '--default-search',
         dest='default_search', metavar='PREFIX',
         help='Use this prefix for unqualified URLs. For example "gvsearch2:" downloads two videos from google videos for youtube-dl "large apple". Use the value "auto" to let youtube-dl guess ("auto_warning" to emit a warning when guessing). "error" just throws an error. The default value "fixup_error" repairs broken URLs, but emits an error if this is not possible instead of searching.')
@@ -342,12 +346,13 @@ def parseOpts(overrideArguments=None):
     video_format.add_option(
         '--youtube-skip-dash-manifest',
         action='store_false', dest='youtube_include_dash_manifest',
-        help='Do not download the DASH manifest on YouTube videos')
+        help='Do not download the DASH manifests and related data on YouTube videos')
     video_format.add_option(
         '--merge-output-format',
         action='store', dest='merge_output_format', metavar='FORMAT', default=None,
         help=(
-            'If a merge is required (e.g. bestvideo+bestaudio), output to given container format. One of mkv, mp4, ogg, webm, flv.'
+            'If a merge is required (e.g. bestvideo+bestaudio), '
+            'output to given container format. One of mkv, mp4, ogg, webm, flv. '
             'Ignored if no merge is required'))
 
     subtitles = optparse.OptionGroup(parser, 'Subtitle Options')

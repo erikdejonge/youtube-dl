@@ -4,7 +4,10 @@ from .abc import ABCIE
 from .abc7news import Abc7NewsIE
 from .academicearth import AcademicEarthCourseIE
 from .addanime import AddAnimeIE
-from .adobetv import AdobeTVIE
+from .adobetv import (
+    AdobeTVIE,
+    AdobeTVVideoIE,
+)
 from .adultswim import AdultSwimIE
 from .aftenposten import AftenpostenIE
 from .aftonbladet import AftonbladetIE
@@ -103,6 +106,7 @@ from .dailymotion import (
     DailymotionIE,
     DailymotionPlaylistIE,
     DailymotionUserIE,
+    DailymotionCloudIE,
 )
 from .daum import DaumIE
 from .dbtv import DBTVIE
@@ -140,7 +144,6 @@ from .ellentv import (
 )
 from .elpais import ElPaisIE
 from .embedly import EmbedlyIE
-from .empflix import EMPFlixIE
 from .engadget import EngadgetIE
 from .eporner import EpornerIE
 from .eroprofile import EroProfileIE
@@ -384,6 +387,7 @@ from .nytimes import (
 from .nuvid import NuvidIE
 from .odnoklassniki import OdnoklassnikiIE
 from .oktoberfesttv import OktoberfestTVIE
+from .onionstudios import OnionStudiosIE
 from .ooyala import (
     OoyalaIE,
     OoyalaExternalIE,
@@ -401,6 +405,7 @@ from .pbs import PBSIE
 from .philharmoniedeparis import PhilharmonieDeParisIE
 from .phoenix import PhoenixIE
 from .photobucket import PhotobucketIE
+from .pinkbike import PinkbikeIE
 from .planetaplay import PlanetaPlayIE
 from .pladform import PladformIE
 from .played import PlayedIE
@@ -487,6 +492,10 @@ from .smotri import (
     SmotriUserIE,
     SmotriBroadcastIE,
 )
+from .snagfilms import (
+    SnagFilmsIE,
+    SnagFilmsEmbedIE,
+)
 from .snotr import SnotrIE
 from .sohu import SohuIE
 from .soompi import (
@@ -567,7 +576,11 @@ from .tmz import (
     TMZIE,
     TMZArticleIE,
 )
-from .tnaflix import TNAFlixIE
+from .tnaflix import (
+    TNAFlixIE,
+    EMPFlixIE,
+    MovieFapIE,
+)
 from .thvideo import (
     THVideoIE,
     THVideoPlaylistIE
@@ -611,6 +624,7 @@ from .twitch import (
     TwitchBookmarksIE,
     TwitchStreamIE,
 )
+from .twitter import TwitterCardIE
 from .ubu import UbuIE
 from .udemy import (
     UdemyIE,
@@ -696,7 +710,10 @@ from .wrzuta import WrzutaIE
 from .wsj import WSJIE
 from .xbef import XBefIE
 from .xboxclips import XboxClipsIE
-from .xhamster import XHamsterIE
+from .xhamster import (
+    XHamsterIE,
+    XHamsterEmbedIE,
+)
 from .xminus import XMinusIE
 from .xnxx import XNXXIE
 from .xstream import XstreamIE

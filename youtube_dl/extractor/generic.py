@@ -43,6 +43,11 @@ from .senateisvp import SenateISVPIE
 from .bliptv import BlipTVIE
 from .svt import SVTIE
 from .pornhub import PornHubIE
+from .xhamster import XHamsterEmbedIE
+from .vimeo import VimeoIE
+from .dailymotion import DailymotionCloudIE
+from .onionstudios import OnionStudiosIE
+from .snagfilms import SnagFilmsEmbedIE
 
 
 class GenericIE(InfoExtractor):
@@ -332,6 +337,15 @@ class GenericIE(InfoExtractor):
                 # m3u8 download
                 'skip_download': True,
             },
+        },
+        # XHamster embed
+        {
+            'url': 'http://www.numisc.com/forum/showthread.php?11696-FM15-which-pumiscer-was-this-%28-vid-%29-%28-alfa-as-fuck-srx-%29&s=711f5db534502e22260dec8c5e2d66d8',
+            'info_dict': {
+                'id': 'showthread',
+                'title': '[NSFL] [FM15] which pumiscer was this ( vid ) ( alfa as fuck srx )',
+            },
+            'playlist_mincount': 7,
         },
         # Embedded TED video
         {
@@ -812,6 +826,50 @@ class GenericIE(InfoExtractor):
                 'description': 'To understand why he was the Toronto Blue Jays’ top off-season priority is to appreciate his background and upbringing in Montreal, where he first developed his baseball skills. Written and narrated by Stephen Brunt.',
                 'uploader': 'Rogers Sportsnet',
             },
+        },
+        # Dailymotion Cloud video
+        {
+            'url': 'http://replay.publicsenat.fr/vod/le-debat/florent-kolandjian,dominique-cena,axel-decourtye,laurence-abeille,bruno-parmentier/175910',
+            'md5': '49444254273501a64675a7e68c502681',
+            'info_dict': {
+                'id': '5585de919473990de4bee11b',
+                'ext': 'mp4',
+                'title': 'Le débat',
+                'thumbnail': 're:^https?://.*\.jpe?g$',
+            }
+        },
+        # OnionStudios embed
+        {
+            'url': 'http://www.clickhole.com/video/dont-understand-bitcoin-man-will-mumble-explanatio-2537',
+            'info_dict': {
+                'id': '2855',
+                'ext': 'mp4',
+                'title': 'Don’t Understand Bitcoin? This Man Will Mumble An Explanation At You',
+                'thumbnail': 're:^https?://.*\.jpe?g$',
+                'uploader': 'ClickHole',
+                'uploader_id': 'clickhole',
+            }
+        },
+        # SnagFilms embed
+        {
+            'url': 'http://whilewewatch.blogspot.ru/2012/06/whilewewatch-whilewewatch-gripping.html',
+            'info_dict': {
+                'id': '74849a00-85a9-11e1-9660-123139220831',
+                'ext': 'mp4',
+                'title': '#whilewewatch',
+            }
+        },
+        # AdobeTVVideo embed
+        {
+            'url': 'https://helpx.adobe.com/acrobat/how-to/new-experience-acrobat-dc.html?set=acrobat--get-started--essential-beginners',
+            'md5': '43662b577c018ad707a63766462b1e87',
+            'info_dict': {
+                'id': '2456',
+                'ext': 'mp4',
+                'title': 'New experience with Acrobat DC',
+                'description': 'New experience with Acrobat DC',
+                'duration': 248.667,
+            },
         }
     ]
 
@@ -979,7 +1037,9 @@ class GenericIE(InfoExtractor):
             }
 
         if not self._downloader.params.get('test', False) and not is_intentional:
-            self._downloader.report_warning('Falling back on generic information extractor.')
+            force = self._downloader.params.get('force_generic_extractor', False)
+            self._downloader.report_warning(
+                '%s on generic information extractor.' % ('Forcing' if force else 'Falling back'))
 
         if not full_response:
             request = compat_urllib_request.Request(url)
@@ -1089,18 +1149,9 @@ class GenericIE(InfoExtractor):
         if matches:
             return _playlist_from_matches(matches, ie='RtlNl')
 
-        # Look for embedded (iframe) Vimeo player
-        mobj = re.search(
-            r'<iframe[^>]+?src=(["\'])(?P<url>(?:https?:)?//player\.vimeo\.com/video/.+?)\1', webpage)
-        if mobj:
-            player_url = unescapeHTML(mobj.group('url'))
-            surl = smuggle_url(player_url, {'Referer': url})
-            return self.url_result(surl)
-        # Look for embedded (swf embed) Vimeo player
-        mobj = re.search(
-            r'<embed[^>]+?src="((?:https?:)?//(?:www\.)?vimeo\.com/moogaloop\.swf.+?)"', webpage)
-        if mobj:
-            return self.url_result(mobj.group(1))
+        vimeo_url = VimeoIE._extract_vimeo_url(url, webpage)
+        if vimeo_url is not None:
+            return self.url_result(vimeo_url)
 
         # Look for embedded YouTube player
         matches = re.findall(r'''(?x)
@@ -1327,6 +1378,11 @@ class GenericIE(InfoExtractor):
         if pornhub_url:
             return self.url_result(pornhub_url, 'PornHub')
 
+        # Look for embedded XHamster player
+        xhamster_urls = XHamsterEmbedIE._extract_urls(webpage)
+        if xhamster_urls:
+            return _playlist_from_matches(xhamster_urls, ie='XHamsterEmbed')
+
         # Look for embedded Tvigle player
         mobj = re.search(
             r'<iframe[^>]+?src=(["\'])(?P<url>(?:https?:)?//cloud\.tvigle\.ru/video/.+?)\1', webpage)
@@ -1493,6 +1549,30 @@ class GenericIE(InfoExtractor):
         senate_isvp_url = SenateISVPIE._search_iframe_url(webpage)
         if senate_isvp_url:
             return self.url_result(senate_isvp_url, 'SenateISVP')
+
+        # Look for Dailymotion Cloud videos
+        dmcloud_url = DailymotionCloudIE._extract_dmcloud_url(webpage)
+        if dmcloud_url:
+            return self.url_result(dmcloud_url, 'DailymotionCloud')
+
+        # Look for OnionStudios embeds
+        onionstudios_url = OnionStudiosIE._extract_url(webpage)
+        if onionstudios_url:
+            return self.url_result(onionstudios_url)
+
+        # Look for SnagFilms embeds
+        snagfilms_url = SnagFilmsEmbedIE._extract_url(webpage)
+        if snagfilms_url:
+            return self.url_result(snagfilms_url)
+
+        # Look for AdobeTVVideo embeds
+        mobj = re.search(
+            r'<iframe[^>]+src=[\'"]((?:https?:)?//video\.tv\.adobe\.com/v/\d+[^"]+)[\'"]',
+            webpage)
+        if mobj is not None:
+            return self.url_result(
+                self._proto_relative_url(unescapeHTML(mobj.group(1))),
+                'AdobeTVVideo')
 
         def check_video(vurl):
             if YoutubeIE.suitable(vurl):

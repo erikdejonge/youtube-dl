@@ -54,6 +54,7 @@ which means you can modify it, redistribute it or use it however you like.
     --dump-user-agent                Display the current browser identification
     --list-extractors                List all supported extractors
     --extractor-descriptions         Output descriptions of all supported extractors
+    --force-generic-extractor        Force extraction to use the generic extractor
     --default-search PREFIX          Use this prefix for unqualified URLs. For example "gvsearch2:" downloads two videos from google videos for youtube-dl "large apple".
                                      Use the value "auto" to let youtube-dl guess ("auto_warning" to emit a warning when guessing). "error" just throws an error. The
                                      default value "fixup_error" repairs broken URLs, but emits an error if this is not possible instead of searching.
@@ -379,7 +380,7 @@ In February 2015, the new YouTube player contained a character sequence in a str
 
 ### HTTP Error 429: Too Many Requests or 402: Payment Required
 
-These two error codes indicate that the service is blocking your IP address because of overuse. Contact the service and ask them to unblock your IP address, or - if you have acquired a whitelisted IP address already - use the [`--proxy` or `--network-address` options](#network-options) to select another IP address.
+These two error codes indicate that the service is blocking your IP address because of overuse. Contact the service and ask them to unblock your IP address, or - if you have acquired a whitelisted IP address already - use the [`--proxy` or `--source-address` options](#network-options) to select another IP address.
 
 ### SyntaxError: Non-ASCII character ###
 
