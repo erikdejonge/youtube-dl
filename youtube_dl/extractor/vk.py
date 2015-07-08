@@ -153,8 +153,13 @@ class VKIE(InfoExtractor):
         if not video_id:
             video_id = '%s_%s' % (mobj.group('oid'), mobj.group('id'))
 
-        info_url = 'http://vk.com/al_video.php?act=show&al=1&module=video&video=%s' % video_id
+        info_url = 'https://vk.com/al_video.php?act=show&al=1&module=video&video=%s' % video_id
         info_page = self._download_webpage(info_url, video_id)
+
+        if re.search(r'<!>/login\.php\?.*\bact=security_check', info_page):
+            raise ExtractorError(
+                'You are trying to log in from an unusual location. You should confirm ownership at vk.com to log in with this IP.',
+                expected=True)
 
         ERRORS = {
             r'>Видеозапись .*? была изъята из публичного доступа в связи с обращением правообладателя.<':
