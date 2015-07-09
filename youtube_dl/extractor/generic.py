@@ -37,6 +37,7 @@ from .rutv import RUTVIE
 from .tvc import TVCIE
 from .sportbox import SportBoxEmbedIE
 from .smotri import SmotriIE
+from .myvi import MyviIE
 from .condenast import CondeNastIE
 from .udn import UDNEmbedIE
 from .senateisvp import SenateISVPIE
@@ -337,6 +338,17 @@ class GenericIE(InfoExtractor):
                 # m3u8 download
                 'skip_download': True,
             },
+        },
+        # Myvi.ru embed
+        {
+            'url': 'http://www.kinomyvi.tv/news/detail/Pervij-dublirovannij-trejler--Uzhastikov-_nOw1',
+            'info_dict': {
+                'id': 'f4dafcad-ff21-423d-89b5-146cfd89fa1e',
+                'ext': 'mp4',
+                'title': 'Ужастики, русский трейлер (2015)',
+                'thumbnail': 're:^https?://.*\.jpg$',
+                'duration': 153,
+            }
         },
         # XHamster embed
         {
@@ -1424,6 +1436,11 @@ class GenericIE(InfoExtractor):
         smotri_url = SmotriIE._extract_url(webpage)
         if smotri_url:
             return self.url_result(smotri_url, 'Smotri')
+
+        # Look for embedded Myvi.ru player
+        myvi_url = MyviIE._extract_url(webpage)
+        if myvi_url:
+            return self.url_result(myvi_url)
 
         # Look for embeded soundcloud player
         mobj = re.search(
