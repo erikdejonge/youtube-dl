@@ -262,6 +262,8 @@ class YoutubeDL(object):
     The following options are used by the post processors:
     prefer_ffmpeg:     If True, use ffmpeg instead of avconv if both are available,
                        otherwise prefer avconv.
+    postprocessor_args: A list of additional command-line arguments for the
+                        postprocessor.
     """
 
     params = None
@@ -1102,7 +1104,8 @@ class YoutubeDL(object):
         if req_format is None:
             req_format_list = []
             if (self.params.get('outtmpl', DEFAULT_OUTTMPL) != '-' and
-                    info_dict['extractor'] in ['youtube', 'ted']):
+                    info_dict['extractor'] in ['youtube', 'ted'] and
+                    not info_dict.get('is_live')):
                 merger = FFmpegMergerPP(self)
                 if merger.available and merger.can_merge():
                     req_format_list.append('bestvideo+bestaudio')

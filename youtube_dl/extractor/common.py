@@ -27,7 +27,9 @@ from ..utils import (
     bug_reports_message,
     clean_html,
     compiled_regex_type,
+    determine_ext,
     ExtractorError,
+    fix_xml_ampersands,
     float_or_none,
     int_or_none,
     RegexNotFoundError,
@@ -63,7 +65,7 @@ class InfoExtractor(object):
 
                     Potential fields:
                     * url        Mandatory. The URL of the video file
-                    * ext        Will be calculated from url if missing
+                    * ext        Will be calculated from URL if missing
                     * format     A human-readable description of the format
                                  ("mp4 container with h264/opus").
                                  Calculated from the format_id, width, height.
@@ -153,7 +155,7 @@ class InfoExtractor(object):
                     lower to higher preference, each element is a dictionary
                     with the "ext" entry and one of:
                         * "data": The subtitles file contents
-                        * "url": A url pointing to the subtitles file
+                        * "url": A URL pointing to the subtitles file
     automatic_captions: Like 'subtitles', used by the YoutubeIE for
                     automatically generated captions
     duration:       Length of the video in seconds, as an integer.
@@ -174,13 +176,17 @@ class InfoExtractor(object):
                                      Set to "root" to indicate that this is a
                                      comment to the original video.
     age_limit:      Age restriction for the video, as an integer (years)
-    webpage_url:    The url to the video webpage, if given to youtube-dl it
+    webpage_url:    The URL to the video webpage, if given to youtube-dl it
                     should allow to get the same result again. (It will be set
                     by YoutubeDL if it's missing)
     categories:     A list of categories that the video falls in, for example
                     ["Sports", "Berlin"]
     is_live:        True, False, or None (=unknown). Whether this video is a
                     live stream that goes on instead of a fixed-length video.
+    start_time:     Time in seconds where the reproduction should start, as
+                    specified in the URL.
+    end_time:       Time in seconds where the reproduction should end, as
+                    specified in the URL.
 
     Unless mentioned otherwise, the fields should be Unicode strings.
 
@@ -499,7 +505,7 @@ class InfoExtractor(object):
     # Methods for following #608
     @staticmethod
     def url_result(url, ie=None, video_id=None, video_title=None):
-        """Returns a url that points to a page that should be processed"""
+        """Returns a URL that points to a page that should be processed"""
         # TODO: ie should be the class used for getting the info
         video_info = {'_type': 'url',
                       'url': url,
@@ -633,7 +639,7 @@ class InfoExtractor(object):
         return unescapeHTML(escaped)
 
     def _og_search_thumbnail(self, html, **kargs):
-        return self._og_search_property('image', html, 'thumbnail url', fatal=False, **kargs)
+        return self._og_search_property('image', html, 'thumbnail URL', fatal=False, **kargs)
 
     def _og_search_description(self, html, **kargs):
         return self._og_search_property('description', html, fatal=False, **kargs)
@@ -704,6 +710,25 @@ class InfoExtractor(object):
     def _twitter_search_player(self, html):
         return self._html_search_meta('twitter:player', html,
                                       'twitter card player')
+
+    @staticmethod
+    def _hidden_inputs(html):
+        return dict([
+            (input.group('name'), input.group('value')) for input in re.finditer(
+                r'''(?x)
+                    <input\s+
+                        type=(?P<q_hidden>["\'])hidden(?P=q_hidden)\s+
+                        name=(?P<q_name>["\'])(?P<name>.+?)(?P=q_name)\s+
+                        (?:id=(?P<q_id>["\']).+?(?P=q_id)\s+)?
+                        value=(?P<q_value>["\'])(?P<value>.*?)(?P=q_value)
+                ''', html)
+        ])
+
+    def _form_hidden_inputs(self, form_id, html):
+        form = self._search_regex(
+            r'(?s)<form[^>]+?id=(["\'])%s\1[^>]*>(?P<form>.+?)</form>' % form_id,
+            html, '%s form' % form_id, group='form')
+        return self._hidden_inputs(form)
 
     def _sort_formats(self, formats, field_preference=None):
         if not formats:
@@ -815,10 +840,14 @@ class InfoExtractor(object):
         self.to_screen(msg)
         time.sleep(timeout)
 
-    def _extract_f4m_formats(self, manifest_url, video_id, preference=None, f4m_id=None):
+    def _extract_f4m_formats(self, manifest_url, video_id, preference=None, f4m_id=None,
+                             transform_source=lambda s: fix_xml_ampersands(s).strip()):
         manifest = self._download_xml(
             manifest_url, video_id, 'Downloading f4m manifest',
-            'Unable to download f4m manifest')
+            'Unable to download f4m manifest',
+            # Some manifests may be malformed, e.g. prosiebensat1 generated manifests
+            # (see https://github.com/rg3/youtube-dl/issues/6215#issuecomment-121704244)
+            transform_source=transform_source)
 
         formats = []
         manifest_version = '1.0'
@@ -828,8 +857,19 @@ class InfoExtractor(object):
             media_nodes = manifest.findall('{http://ns.adobe.com/f4m/2.0}media')
         for i, media_el in enumerate(media_nodes):
             if manifest_version == '2.0':
-                manifest_url = ('/'.join(manifest_url.split('/')[:-1]) + '/' +
-                                (media_el.attrib.get('href') or media_el.attrib.get('url')))
+                media_url = media_el.attrib.get('href') or media_el.attrib.get('url')
+                if not media_url:
+                    continue
+                manifest_url = (
+                    media_url if media_url.startswith('http://') or media_url.startswith('https://')
+                    else ('/'.join(manifest_url.split('/')[:-1]) + '/' + media_url))
+                # If media_url is itself a f4m manifest do the recursive extraction
+                # since bitrates in parent manifest (this one) and media_url manifest
+                # may differ leading to inability to resolve the format by requested
+                # bitrate in f4m downloader
+                if determine_ext(manifest_url) == 'f4m':
+                    formats.extend(self._extract_f4m_formats(manifest_url, video_id, preference, f4m_id))
+                    continue
             tbr = int_or_none(media_el.attrib.get('bitrate'))
             formats.append({
                 'format_id': '-'.join(filter(None, [f4m_id, compat_str(i if tbr is None else tbr)])),
@@ -960,7 +1000,7 @@ class InfoExtractor(object):
     def _parse_smil_video(self, video, video_id, base, rtmp_count):
         src = video.get('src')
         if not src:
-            return ([], rtmp_count)
+            return [], rtmp_count
         bitrate = int_or_none(video.get('system-bitrate') or video.get('systemBitrate'), 1000)
         width = int_or_none(video.get('width'))
         height = int_or_none(video.get('height'))
@@ -973,7 +1013,7 @@ class InfoExtractor(object):
                     proto = 'http'
         ext = video.get('ext')
         if proto == 'm3u8':
-            return (self._extract_m3u8_formats(src, video_id, ext), rtmp_count)
+            return self._extract_m3u8_formats(src, video_id, ext), rtmp_count
         elif proto == 'rtmp':
             rtmp_count += 1
             streamer = video.get('streamer') or base
@@ -1080,7 +1120,7 @@ class InfoExtractor(object):
 class SearchInfoExtractor(InfoExtractor):
     """
     Base class for paged search queries extractors.
-    They accept urls in the format _SEARCH_KEY(|all|[0-9]):{query}
+    They accept URLs in the format _SEARCH_KEY(|all|[0-9]):{query}
     Instances should define _SEARCH_KEY and _MAX_RESULTS.
     """
 

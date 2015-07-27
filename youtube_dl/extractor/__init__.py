@@ -19,9 +19,14 @@ from .anysex import AnySexIE
 from .aol import AolIE
 from .allocine import AllocineIE
 from .aparat import AparatIE
+from .appleconnect import AppleConnectIE
 from .appletrailers import AppleTrailersIE
 from .archiveorg import ArchiveOrgIE
-from .ard import ARDIE, ARDMediathekIE
+from .ard import (
+    ARDIE,
+    ARDMediathekIE,
+    SportschauIE,
+)
 from .arte import (
     ArteTvIE,
     ArteTVPlus7IE,
@@ -38,7 +43,10 @@ from .azubu import AzubuIE
 from .baidu import BaiduVideoIE
 from .bambuser import BambuserIE, BambuserChannelIE
 from .bandcamp import BandcampIE, BandcampAlbumIE
-from .bbccouk import BBCCoUkIE
+from .bbc import (
+    BBCCoUkIE,
+    BBCIE,
+)
 from .beeg import BeegIE
 from .behindkink import BehindKinkIE
 from .beatportpro import BeatportProIE
@@ -238,6 +246,7 @@ from .instagram import InstagramIE, InstagramUserIE
 from .internetvideoarchive import InternetVideoArchiveIE
 from .iprima import IPrimaIE
 from .iqiyi import IqiyiIE
+from .ir90tv import Ir90TvIE
 from .ivi import (
     IviIE,
     IviCompilationIE
@@ -260,8 +269,17 @@ from .keek import KeekIE
 from .kontrtube import KontrTubeIE
 from .krasview import KrasViewIE
 from .ku6 import Ku6IE
+from .kuwo import (
+    KuwoIE,
+    KuwoAlbumIE,
+    KuwoChartIE,
+    KuwoSingerIE,
+    KuwoCategoryIE,
+    KuwoMvIE,
+)
 from .la7 import LA7IE
 from .laola1tv import Laola1TvIE
+from .lecture2go import Lecture2GoIE
 from .letv import (
     LetvIE,
     LetvTvIE,
@@ -343,6 +361,15 @@ from .ndtv import NDTVIE
 from .netzkino import NetzkinoIE
 from .nerdcubed import NerdCubedFeedIE
 from .nerdist import NerdistIE
+from .neteasemusic import (
+    NetEaseMusicIE,
+    NetEaseMusicAlbumIE,
+    NetEaseMusicSingerIE,
+    NetEaseMusicListIE,
+    NetEaseMusicMvIE,
+    NetEaseMusicProgramIE,
+    NetEaseMusicDjRadioIE,
+)
 from .newgrounds import NewgroundsIE
 from .newstube import NewstubeIE
 from .nextmedia import (
@@ -372,7 +399,8 @@ from .npo import (
     NPOLiveIE,
     NPORadioIE,
     NPORadioFragmentIE,
-    TegenlichtVproIE,
+    VPROIE,
+    WNLIE
 )
 from .nrk import (
     NRKIE,
@@ -443,6 +471,7 @@ from .radiobremen import RadioBremenIE
 from .radiofrance import RadioFranceIE
 from .rai import RaiIE
 from .rbmaradio import RBMARadioIE
+from .rds import RDSIE
 from .redtube import RedTubeIE
 from .restudy import RestudyIE
 from .reverbnation import ReverbNationIE
@@ -704,7 +733,10 @@ from .wdr import (
     WDRMobileIE,
     WDRMausIE,
 )
-from .webofstories import WebOfStoriesIE
+from .webofstories import (
+    WebOfStoriesIE,
+    WebOfStoriesPlaylistIE,
+)
 from .weibo import WeiboIE
 from .wimp import WimpIE
 from .wistia import WistiaIE

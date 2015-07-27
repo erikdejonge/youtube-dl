@@ -44,6 +44,21 @@ class RtlNlIE(InfoExtractor):
             'description': 'Er zijn nieuwe beelden vrijgegeven die vlak na de aanslag in Kopenhagen zijn gemaakt. Op de video is goed te zien hoe omstanders zich bekommeren om één van de slachtoffers, terwijl de eerste agenten ter plaatse komen.',
         }
     }, {
+        # empty synopsis and missing episodes (see https://github.com/rg3/youtube-dl/issues/6275)
+        'url': 'http://www.rtl.nl/system/videoplayer/derden/rtlnieuws/video_embed.html#uuid=f536aac0-1dc3-4314-920e-3bd1c5b3811a/autoplay=false',
+        'info_dict': {
+            'id': 'f536aac0-1dc3-4314-920e-3bd1c5b3811a',
+            'ext': 'mp4',
+            'title': 'RTL Nieuws - Meer beelden van overval juwelier',
+            'thumbnail': 're:^https?://screenshots\.rtl\.nl/system/thumb/sz=[0-9]+x[0-9]+/uuid=f536aac0-1dc3-4314-920e-3bd1c5b3811a$',
+            'timestamp': 1437233400,
+            'upload_date': '20150718',
+            'duration': 30.474,
+        },
+        'params': {
+            'skip_download': True,
+        },
+    }, {
         # encrypted m3u8 streams, georestricted
         'url': 'http://www.rtlxl.nl/#!/afl-2-257632/52a74543-c504-4cde-8aa8-ec66fe8d68a7',
         'only_matching': True,
@@ -59,22 +74,29 @@ class RtlNlIE(InfoExtractor):
             uuid)
 
         material = info['material'][0]
-        progname = info['abstracts'][0]['name']
-        subtitle = material['title'] or info['episodes'][0]['name']
-        description = material.get('synopsis') or info['episodes'][0]['synopsis']
+        title = info['abstracts'][0]['name']
+        subtitle = material.get('title')
+        if subtitle:
+            title += ' - %s' % subtitle
+        description = material.get('synopsis')
 
         meta = info.get('meta', {})
 
-        # Use unencrypted m3u8 streams (See https://github.com/rg3/youtube-dl/issues/4118)
-        # NB: nowadays, recent ffmpeg and avconv can handle these encrypted streams, so
-        # this adaptive -> flash workaround is not required in general, but it also
-        # allows bypassing georestriction therefore is retained for now.
-        videopath = material['videopath'].replace('/adaptive/', '/flash/')
+        # m3u8 streams are encrypted and may not be handled properly by older ffmpeg/avconv.
+        # To workaround this previously adaptive -> flash trick was used to obtain
+        # unencrypted m3u8 streams (see https://github.com/rg3/youtube-dl/issues/4118)
+        # and bypass georestrictions as well.
+        # Currently, unencrypted m3u8 playlists are (intentionally?) invalid and therefore
+        # unusable albeit can be fixed by simple string replacement (see
+        # https://github.com/rg3/youtube-dl/pull/6337)
+        # Since recent ffmpeg and avconv handle encrypted streams just fine encrypted
+        # streams are used now.
+        videopath = material['videopath']
         m3u8_url = meta.get('videohost', 'http://manifest.us.rtl.nl') + videopath
 
         formats = self._extract_m3u8_formats(m3u8_url, uuid, ext='mp4')
 
-        video_urlpart = videopath.split('/flash/')[1][:-5]
+        video_urlpart = videopath.split('/adaptive/')[1][:-5]
         PG_URL_TEMPLATE = 'http://pg.us.rtl.nl/rtlxl/network/%s/progressive/%s.mp4'
 
         formats.extend([
@@ -107,7 +129,7 @@ class RtlNlIE(InfoExtractor):
 
         return {
             'id': uuid,
-            'title': '%s - %s' % (progname, subtitle),
+            'title': title,
             'formats': formats,
             'timestamp': material['original_date'],
             'description': description,
