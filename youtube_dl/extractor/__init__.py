@@ -118,6 +118,7 @@ from .dailymotion import (
 )
 from .daum import DaumIE
 from .dbtv import DBTVIE
+from .dcn import DCNIE
 from .dctp import DctpTvIE
 from .deezer import DeezerPlaylistIE
 from .dfb import DFBIE
@@ -157,6 +158,7 @@ from .eporner import EpornerIE
 from .eroprofile import EroProfileIE
 from .escapist import EscapistIE
 from .espn import ESPNIE
+from .esri import EsriVideoIE
 from .everyonesmixtape import EveryonesMixtapeIE
 from .exfm import ExfmIE
 from .expotv import ExpoTVIE
@@ -241,6 +243,10 @@ from .imdb import (
 )
 from .imgur import ImgurIE
 from .ina import InaIE
+from .indavideo import (
+    IndavideoIE,
+    IndavideoEmbedIE,
+)
 from .infoq import InfoQIE
 from .instagram import InstagramIE, InstagramUserIE
 from .internetvideoarchive import InternetVideoArchiveIE
@@ -431,6 +437,10 @@ from .orf import (
 from .parliamentliveuk import ParliamentLiveUKIE
 from .patreon import PatreonIE
 from .pbs import PBSIE
+from .periscope import (
+    PeriscopeIE,
+    QuickscopeIE,
+)
 from .philharmoniedeparis import PhilharmonieDeParisIE
 from .phoenix import PhoenixIE
 from .photobucket import PhotobucketIE
@@ -439,6 +449,7 @@ from .planetaplay import PlanetaPlayIE
 from .pladform import PladformIE
 from .played import PlayedIE
 from .playfm import PlayFMIE
+from .playtvak import PlaytvakIE
 from .playvid import PlayvidIE
 from .playwire import PlaywireIE
 from .podomatic import PodomaticIE
@@ -486,6 +497,7 @@ from .rtl2 import RTL2IE
 from .rtp import RTPIE
 from .rts import RTSIE
 from .rtve import RTVEALaCartaIE, RTVELiveIE, RTVEInfantilIE
+from .rtvnh import RTVNHIE
 from .ruhd import RUHDIE
 from .rutube import (
     RutubeIE,
@@ -512,6 +524,7 @@ from .senateisvp import SenateISVPIE
 from .servingsys import ServingSysIE
 from .sexu import SexuIE
 from .sexykarma import SexyKarmaIE
+from .shahid import ShahidIE
 from .shared import SharedIE
 from .sharesix import ShareSixIE
 from .sina import SinaIE
@@ -591,6 +604,7 @@ from .techtalks import TechTalksIE
 from .ted import TEDIE
 from .telebruxelles import TeleBruxellesIE
 from .telecinco import TelecincoIE
+from .telegraaf import TelegraafIE
 from .telemb import TeleMBIE
 from .teletask import TeleTaskIE
 from .tenplay import TenPlayIE

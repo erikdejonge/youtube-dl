@@ -51,6 +51,7 @@
  - **bambuser:channel**
  - **Bandcamp**
  - **Bandcamp:album**
+ - **bbc**: BBC
  - **bbc.co.uk**: BBC iPlayer
  - **BeatportPro**
  - **Beeg**
@@ -85,7 +86,7 @@
  - **chirbit:profile**
  - **Cinchcast**
  - **Cinemassacre**
- - **clipfish**
+ - **Clipfish**
  - **cliphunter**
  - **Clipsyndicate**
  - **Cloudy**
@@ -115,6 +116,7 @@
  - **DailymotionCloud**
  - **daum.net**
  - **DBTV**
+ - **DCN**
  - **DctpTv**
  - **DeezerPlaylist**
  - **defense.gouv.fr**
@@ -148,6 +150,7 @@
  - **EroProfile**
  - **Escapist**
  - **ESPN** (Currently broken)
+ - **EsriVideo**
  - **EveryonesMixtape**
  - **exfm**: ex.fm
  - **ExpoTV**
@@ -218,12 +221,15 @@
  - **imdb:list**: Internet Movie Database lists
  - **Imgur**
  - **Ina**
+ - **Indavideo**
+ - **IndavideoEmbed**
  - **InfoQ**
  - **Instagram**
  - **instagram:user**: Instagram user profile
  - **InternetVideoArchive**
  - **IPrima**
  - **iqiyi**: 爱奇艺
+ - **Ir90Tv**
  - **ivi**: ivi.ru
  - **ivi:compilation**: ivi.ru compilations
  - **Izlesene**
@@ -252,6 +258,7 @@
  - **kuwo:song**: 酷我音乐
  - **la7.tv**
  - **Laola1Tv**
+ - **Lecture2Go**
  - **Letv**: 乐视网
  - **LetvPlaylist**
  - **LetvTv**
@@ -348,7 +355,6 @@
  - **NowTV**
  - **nowvideo**: NowVideo
  - **npo**: npo.nl and ntr.nl
- - **npo**: npo.nl and ntr.nl
  - **npo.nl:live**
  - **npo.nl:radio**
  - **npo.nl:radio:fragment**
@@ -374,6 +380,7 @@
  - **parliamentlive.tv**: UK parliament videos
  - **Patreon**
  - **PBS**
+ - **Periscope**: Periscope
  - **PhilharmonieDeParis**: Philharmonie de Paris
  - **Phoenix**
  - **Photobucket**
@@ -382,6 +389,7 @@
  - **PlanetaPlay**
  - **play.fm**
  - **played.to**
+ - **Playtvak**: Playtvak.cz, iDNES.cz and Lidovky.cz
  - **Playvid**
  - **Playwire**
  - **plus.google**: Google Plus
@@ -403,6 +411,7 @@
  - **qqmusic:playlist**: QQ音乐 - 歌单
  - **qqmusic:singer**: QQ音乐 - 歌手
  - **qqmusic:toplist**: QQ音乐 - 排行榜
+ - **Quickscope**: Quick Scope
  - **QuickVid**
  - **R7**
  - **radio.de**
@@ -427,6 +436,7 @@
  - **rtve.es:alacarta**: RTVE a la carta
  - **rtve.es:infantil**: RTVE infantil
  - **rtve.es:live**: RTVE.es live streams
+ - **RTVNH**
  - **RUHD**
  - **rutube**: Rutube videos
  - **rutube:channel**: Rutube channels
@@ -450,6 +460,7 @@
  - **ServingSys**
  - **Sexu**
  - **SexyKarma**: Sexy Karma and Watch Indian Porn
+ - **Shahid**
  - **Shared**
  - **ShareSix**
  - **Sina**
@@ -515,6 +526,7 @@
  - **ted**
  - **TeleBruxelles**
  - **telecinco.es**
+ - **Telegraaf**
  - **TeleMB**
  - **TeleTask**
  - **TenPlay**
@@ -618,6 +630,7 @@
  - **Vodlocker**
  - **VoiceRepublic**
  - **Vporn**
+ - **vpro**: npo.nl and ntr.nl
  - **VRT**
  - **vube**: Vube.com
  - **VuClip**
