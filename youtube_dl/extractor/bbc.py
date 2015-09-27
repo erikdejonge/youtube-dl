@@ -21,6 +21,10 @@ class BBCCoUkIE(InfoExtractor):
     _VALID_URL = r'https?://(?:www\.)?bbc\.co\.uk/(?:(?:(?:programmes|iplayer(?:/[^/]+)?/(?:episode|playlist))/)|music/clips[/#])(?P<id>[\da-z]{8})'
 
     _MEDIASELECTOR_URLS = [
+        # Provides HQ HLS streams with even better quality that pc mediaset but fails
+        # with geolocation in some cases when it's even not geo restricted at all (e.g.
+        # http://www.bbc.co.uk/programmes/b06bp7lf)
+        'http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/iptv-all/vpid/%s',
         'http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/%s',
     ]
 
@@ -153,6 +157,21 @@ class BBCCoUkIE(InfoExtractor):
             },
             'skip': 'geolocation',
         }, {
+            # iptv-all mediaset fails with geolocation however there is no geo restriction
+            # for this programme at all
+            'url': 'http://www.bbc.co.uk/programmes/b06bp7lf',
+            'info_dict': {
+                'id': 'b06bp7kf',
+                'ext': 'flv',
+                'title': "Annie Mac's Friday Night, B.Traits sits in for Annie",
+                'description': 'B.Traits sits in for Annie Mac with a Mini-Mix from Disclosure.',
+                'duration': 10800,
+            },
+            'params': {
+                # rtmp download
+                'skip_download': True,
+            },
+        }, {
             'url': 'http://www.bbc.co.uk/iplayer/playlist/p01dvks4',
             'only_matching': True,
         }, {
@@ -189,6 +208,12 @@ class BBCCoUkIE(InfoExtractor):
             # Skip DASH until supported
             elif transfer_format == 'dash':
                 pass
+            elif transfer_format == 'hls':
+                m3u8_formats = self._extract_m3u8_formats(
+                    href, programme_id, ext='mp4', entry_protocol='m3u8_native',
+                    m3u8_id=supplier, fatal=False)
+                if m3u8_formats:
+                    formats.extend(m3u8_formats)
             # Direct link
             else:
                 formats.append({
@@ -287,7 +312,7 @@ class BBCCoUkIE(InfoExtractor):
                 return self._download_media_selector_url(
                     mediaselector_url % programme_id, programme_id)
             except BBCCoUkIE.MediaSelectionError as e:
-                if e.id == 'notukerror':
+                if e.id in ('notukerror', 'geolocation'):
                     last_exception = e
                     continue
                 self._raise_extractor_error(e)
