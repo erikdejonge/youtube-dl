@@ -191,7 +191,7 @@ class IqiyiIE(InfoExtractor):
             'vid': video_id,
             'vinfo': 1,
             'tm': tm,
-            'enc': self.md5_text((enc_key + tail)[1:64:2] + tail),
+            'enc': self.md5_text(enc_key + tail),
             'qyid': _uuid,
             'tn': random.random(),
             'um': 0,
@@ -205,7 +205,9 @@ class IqiyiIE(InfoExtractor):
 
     def get_enc_key(self, swf_url, video_id):
         # TODO: automatic key extraction
-        enc_key = 'eac64f22daf001da6ba9aa8da4d501508bbe90a4d4091fea3b0582a85b38c2cc'  # last update at 2015-09-23-23 for Zombie::bite
+        # last update at 2015-10-22 for Zombie::bite
+        # '7223c67061dbea1259d0ceb44f44b6d62288f4f80c972170de5201d2321060270e05'[2:66][0::2]
+        enc_key = '2c76de15dcb44bd28ff0927d50d31620'
         return enc_key
 
     def _real_extract(self, url):

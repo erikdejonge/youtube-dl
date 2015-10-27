@@ -15,7 +15,7 @@ class MiTeleIE(InfoExtractor):
 
     _TESTS = [{
         'url': 'http://www.mitele.es/programas-tv/diario-de/la-redaccion/programa-144/',
-        'md5': 'ace7635b2a0b286aaa37d3ff192d2a8a',
+        'md5': '757b0b66cbd7e0a97226d7d3156cb3e9',
         'info_dict': {
             'id': '0NF1jJnxS1Wu3pHrmvFyw2',
             'display_id': 'programa-144',
@@ -56,7 +56,7 @@ class MiTeleIE(InfoExtractor):
                 'sta': '0',
             }
             media = self._download_json(
-                '%s/?%s' % (gat, compat_urllib_parse.urlencode(encode_dict(token_data)).encode('utf-8')),
+                '%s/?%s' % (gat, compat_urllib_parse.urlencode(encode_dict(token_data))),
                 display_id, 'Downloading %s JSON' % location['loc'])
             file_ = media.get('file')
             if not file_:

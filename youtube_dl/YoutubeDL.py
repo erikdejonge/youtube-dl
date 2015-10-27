@@ -37,6 +37,7 @@ from .compat import (
     compat_tokenize_tokenize,
     compat_urllib_error,
     compat_urllib_request,
+    compat_urllib_request_DataHandler,
 )
 from .utils import (
     ContentTooShortError,
@@ -1232,13 +1233,20 @@ class YoutubeDL(object):
             except (ValueError, OverflowError, OSError):
                 pass
 
+        subtitles = info_dict.get('subtitles')
+        if subtitles:
+            for _, subtitle in subtitles.items():
+                for subtitle_format in subtitle:
+                    if 'ext' not in subtitle_format:
+                        subtitle_format['ext'] = determine_ext(subtitle_format['url']).lower()
+
         if self.params.get('listsubtitles', False):
             if 'automatic_captions' in info_dict:
                 self.list_subtitles(info_dict['id'], info_dict.get('automatic_captions'), 'automatic captions')
-            self.list_subtitles(info_dict['id'], info_dict.get('subtitles'), 'subtitles')
+            self.list_subtitles(info_dict['id'], subtitles, 'subtitles')
             return
         info_dict['requested_subtitles'] = self.process_subtitles(
-            info_dict['id'], info_dict.get('subtitles'),
+            info_dict['id'], subtitles,
             info_dict.get('automatic_captions'))
 
         # We now pick which formats have to be downloaded
@@ -1960,8 +1968,9 @@ class YoutubeDL(object):
         debuglevel = 1 if self.params.get('debug_printtraffic') else 0
         https_handler = make_HTTPS_handler(self.params, debuglevel=debuglevel)
         ydlh = YoutubeDLHandler(self.params, debuglevel=debuglevel)
+        data_handler = compat_urllib_request_DataHandler()
         opener = compat_urllib_request.build_opener(
-            proxy_handler, https_handler, cookie_processor, ydlh)
+            proxy_handler, https_handler, cookie_processor, ydlh, data_handler)
 
         # Delete the default user-agent header, which would otherwise apply in
         # cases where our custom HTTP handler doesn't come into play

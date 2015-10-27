@@ -83,6 +83,14 @@ class FranceTVBaseInfoExtractor(InfoExtractor):
         if subtitle:
             title += ' - %s' % subtitle
 
+        subtitles = {}
+        subtitles_list = [{
+            'url': subtitle['url'],
+            'ext': subtitle.get('format'),
+        } for subtitle in info.get('subtitles', []) if subtitle.get('url')]
+        if subtitles_list:
+            subtitles['fr'] = subtitles_list
+
         return {
             'id': video_id,
             'title': title,
@@ -91,6 +99,7 @@ class FranceTVBaseInfoExtractor(InfoExtractor):
             'duration': int_or_none(info.get('real_duration')) or parse_duration(info['duree']),
             'timestamp': int_or_none(info['diffusion']['timestamp']),
             'formats': formats,
+            'subtitles': subtitles,
         }
 
 
@@ -120,6 +129,9 @@ class FranceTvInfoIE(FranceTVBaseInfoExtractor):
             'title': 'Soir 3',
             'upload_date': '20130826',
             'timestamp': 1377548400,
+            'subtitles': {
+                'fr': 'mincount:2',
+            },
         },
     }, {
         'url': 'http://www.francetvinfo.fr/elections/europeennes/direct-europeennes-regardez-le-debat-entre-les-candidats-a-la-presidence-de-la-commission_600639.html',

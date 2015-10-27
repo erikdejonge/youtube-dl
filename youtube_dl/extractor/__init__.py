@@ -45,6 +45,7 @@ from .bambuser import BambuserIE, BambuserChannelIE
 from .bandcamp import BandcampIE, BandcampAlbumIE
 from .bbc import (
     BBCCoUkIE,
+    BBCCoUkArticleIE,
     BBCIE,
 )
 from .beeg import BeegIE
@@ -76,6 +77,7 @@ from .cbssports import CBSSportsIE
 from .ccc import CCCIE
 from .ceskatelevize import CeskaTelevizeIE
 from .channel9 import Channel9IE
+from .chaturbate import ChaturbateIE
 from .chilloutzone import ChilloutzoneIE
 from .chirbit import (
     ChirbitIE,
@@ -158,6 +160,7 @@ from .eroprofile import EroProfileIE
 from .escapist import EscapistIE
 from .espn import ESPNIE
 from .esri import EsriVideoIE
+from .europa import EuropaIE
 from .everyonesmixtape import EveryonesMixtapeIE
 from .exfm import ExfmIE
 from .expotv import ExpoTVIE
@@ -165,6 +168,7 @@ from .extremetube import ExtremeTubeIE
 from .facebook import FacebookIE
 from .faz import FazIE
 from .fc2 import FC2IE
+from .fczenit import FczenitIE
 from .firstpost import FirstpostIE
 from .firsttv import FirstTVIE
 from .fivemin import FiveMinIE
@@ -294,6 +298,11 @@ from .lifenews import (
     LifeNewsIE,
     LifeEmbedIE,
 )
+from .limelight import (
+    LimelightMediaIE,
+    LimelightChannelIE,
+    LimelightChannelListIE,
+)
 from .liveleak import LiveLeakIE
 from .livestream import (
     LivestreamIE,
@@ -311,7 +320,6 @@ from .macgamestore import MacGameStoreIE
 from .mailru import MailRuIE
 from .malemotion import MalemotionIE
 from .mdr import MDRIE
-from .megavideoz import MegaVideozIE
 from .metacafe import MetacafeIE
 from .metacritic import MetacriticIE
 from .mgoon import MgoonIE
@@ -579,6 +587,7 @@ from .spankwire import SpankwireIE
 from .spiegel import SpiegelIE, SpiegelArticleIE
 from .spiegeltv import SpiegeltvIE
 from .spike import SpikeIE
+from .stitcher import StitcherIE
 from .sport5 import Sport5IE
 from .sportbox import (
     SportBoxIE,
@@ -683,7 +692,7 @@ from .twitch import (
     TwitchBookmarksIE,
     TwitchStreamIE,
 )
-from .twitter import TwitterCardIE
+from .twitter import TwitterCardIE, TwitterIE
 from .ubu import UbuIE
 from .udemy import (
     UdemyIE,
