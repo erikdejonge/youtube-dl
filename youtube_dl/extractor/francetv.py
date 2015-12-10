@@ -85,9 +85,9 @@ class FranceTVBaseInfoExtractor(InfoExtractor):
 
         subtitles = {}
         subtitles_list = [{
-            'url': subtitle['url'],
-            'ext': subtitle.get('format'),
-        } for subtitle in info.get('subtitles', []) if subtitle.get('url')]
+            'url': subformat['url'],
+            'ext': subformat.get('format'),
+        } for subformat in info.get('subtitles', []) if subformat.get('url')]
         if subtitles_list:
             subtitles['fr'] = subtitles_list
 
@@ -105,15 +105,21 @@ class FranceTVBaseInfoExtractor(InfoExtractor):
 
 class PluzzIE(FranceTVBaseInfoExtractor):
     IE_NAME = 'pluzz.francetv.fr'
-    _VALID_URL = r'https?://pluzz\.francetv\.fr/videos/(.*?)\.html'
+    _VALID_URL = r'https?://(?:m\.)?pluzz\.francetv\.fr/videos/(?P<id>.+?)\.html'
 
     # Can't use tests, videos expire in 7 days
 
     def _real_extract(self, url):
-        title = re.match(self._VALID_URL, url).group(1)
-        webpage = self._download_webpage(url, title)
-        video_id = self._search_regex(
-            r'data-diffusion="(\d+)"', webpage, 'ID')
+        display_id = self._match_id(url)
+
+        webpage = self._download_webpage(url, display_id)
+
+        video_id = self._html_search_meta(
+            'id_video', webpage, 'video id', default=None)
+        if not video_id:
+            video_id = self._search_regex(
+                r'data-diffusion=["\'](\d+)', webpage, 'video id')
+
         return self._extract_video(video_id, 'Pluzz')
 
 
