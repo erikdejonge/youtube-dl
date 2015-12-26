@@ -23,7 +23,6 @@
  - **AdobeTVShow**
  - **AdobeTVVideo**
  - **AdultSwim**
- - **Aftenposten**
  - **Aftonbladet**
  - **AirMozilla**
  - **AlJazeera**
@@ -34,7 +33,8 @@
  - **Aparat**
  - **AppleConnect**
  - **AppleDaily**: 臺灣蘋果日報
- - **AppleTrailers**
+ - **appletrailers**
+ - **appletrailers:section**
  - **archive.org**: archive.org videos
  - **ARD**
  - **ARD:mediathek**
@@ -65,9 +65,9 @@
  - **Bet**
  - **Bild**: Bild.de
  - **BiliBili**
+ - **BleacherReport**
+ - **BleacherReportCMS**
  - **blinkx**
- - **blip.tv:user**
- - **BlipTV**
  - **Bloomberg**
  - **Bpb**: Bundeszentrale für politische Bildung
  - **BR**: Bayerischer Rundfunk Mediathek
@@ -80,7 +80,6 @@
  - **BYUtv**
  - **Camdemy**
  - **CamdemyFolder**
- - **Canal13cl**
  - **canalc2.tv**
  - **Canalplus**: canalplus.fr, piwiplus.fr and d8.tv
  - **CBS**
@@ -210,7 +209,9 @@
  - **GodTube**
  - **GoldenMoustache**
  - **Golem**
+ - **GoogleDrive**
  - **Goshgay**
+ - **GPUTechConf**
  - **Groupon**
  - **Hark**
  - **HearThisAt**
@@ -252,6 +253,7 @@
  - **Jove**
  - **jpopsuki.tv**
  - **Jukebox**
+ - **JWPlatform**
  - **Kaltura**
  - **KanalPlay**: Kanal 5/9/11 Play
  - **Kankan**
@@ -292,6 +294,7 @@
  - **m6**
  - **macgamestore**: MacGameStore trailers
  - **mailru**: Видео@Mail.Ru
+ - **MakerTV**
  - **Malemotion**
  - **MDR**: MDR.DE and KiKA
  - **media.ccc.de**
@@ -499,8 +502,6 @@
  - **SnagFilmsEmbed**
  - **Snotr**
  - **Sohu**
- - **soompi**
- - **soompi:show**
  - **soundcloud**
  - **soundcloud:playlist**
  - **soundcloud:search**: Soundcloud search
@@ -551,6 +552,7 @@
  - **TechTalks**
  - **techtv.mit.edu**
  - **ted**
+ - **Tele13**
  - **TeleBruxelles**
  - **Telecinco**: telecinco.es, cuatro.com and mediaset.es
  - **Telegraaf**
@@ -573,6 +575,7 @@
  - **TMZ**
  - **TMZArticle**
  - **TNAFlix**
+ - **toggle**
  - **tou.tv**
  - **Toypics**: Toypics user profile
  - **ToypicsUser**: Toypics user profile
@@ -622,7 +625,7 @@
  - **Vessel**
  - **Vesti**: Вести.Ru
  - **Vevo**
- - **VGTV**: VGTV and BTTV
+ - **VGTV**: VGTV, BTTV, FTV, Aftenposten and Aftonbladet
  - **vh1.com**
  - **Vice**
  - **Viddler**
@@ -711,6 +714,7 @@
  - **youtube:favorites**: YouTube.com favourite videos, ":ytfav" for short (requires authentication)
  - **youtube:history**: Youtube watch history, ":ythistory" for short (requires authentication)
  - **youtube:playlist**: YouTube.com playlists
+ - **youtube:playlists**: YouTube.com user/channel playlists
  - **youtube:recommended**: YouTube.com recommended videos, ":ytrec" for short (requires authentication)
  - **youtube:search**: YouTube.com searches
  - **youtube:search:date**: YouTube.com searches, newest videos first
@@ -718,7 +722,6 @@
  - **youtube:show**: YouTube.com (multi-season) shows
  - **youtube:subscriptions**: YouTube.com subscriptions feed, "ytsubs" keyword (requires authentication)
  - **youtube:user**: YouTube.com user videos (URL or "ytuser" keyword)
- - **youtube:user:playlists**: YouTube.com user playlists
  - **youtube:watchlater**: Youtube watch later list, ":ytwatchlater" for short (requires authentication)
  - **Zapiks**
  - **ZDF**
