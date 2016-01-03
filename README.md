@@ -400,7 +400,7 @@ which means you can modify it, redistribute it or use it however you like.
                                      downloading, similar to find's -exec
                                      syntax. Example: --exec 'adb push {}
                                      /sdcard/Music/ && rm {}'
-    --convert-subtitles FORMAT       Convert the subtitles to other format
+    --convert-subs FORMAT            Convert the subtitles to other format
                                      (currently supported: srt|ass|vtt)
 
 # CONFIGURATION
@@ -757,7 +757,7 @@ with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     ydl.download(['http://www.youtube.com/watch?v=BaW_jenozKc'])
 ```
 
-Most likely, you'll want to use various options. For a list of what can be done, have a look at [youtube_dl/YoutubeDL.py](https://github.com/rg3/youtube-dl/blob/master/youtube_dl/YoutubeDL.py#L117-L265). For a start, if you want to intercept youtube-dl's output, set a `logger` object.
+Most likely, you'll want to use various options. For a list of what can be done, have a look at [`youtube_dl/YoutubeDL.py`](https://github.com/rg3/youtube-dl/blob/master/youtube_dl/YoutubeDL.py#L121-L269). For a start, if you want to intercept youtube-dl's output, set a `logger` object.
 
 Here's a more complete example of a program that outputs only errors (and a short message after the download is finished), and downloads/converts the video to an mp3 file:
 
@@ -830,7 +830,7 @@ So please elaborate on what feature you are requesting, or what bug you want to 
 - How it could be fixed
 - How your proposed solution would look like
 
-If your report is shorter than two lines, it is almost certainly missing some of these, which makes it hard for us to respond to it. We're often too polite to close the issue outright, but the missing info makes misinterpretation likely. As a commiter myself, I often get frustrated by these issues, since the only possible way for me to move forward on them is to ask for clarification over and over.
+If your report is shorter than two lines, it is almost certainly missing some of these, which makes it hard for us to respond to it. We're often too polite to close the issue outright, but the missing info makes misinterpretation likely. As a committer myself, I often get frustrated by these issues, since the only possible way for me to move forward on them is to ask for clarification over and over.
 
 For bug reports, this means that your report should contain the *complete* output of youtube-dl when called with the `-v` flag. The error message you get for (most) bugs even says so, but you would not believe how many of our bug reports do not contain this information.
 

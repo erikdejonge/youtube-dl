@@ -2,6 +2,9 @@
 from __future__ import unicode_literals
 
 import base64
+import random
+import string
+import time
 
 from .common import InfoExtractor
 from ..compat import (
@@ -141,6 +144,11 @@ class YoukuIE(InfoExtractor):
 
         return video_urls_dict
 
+    @staticmethod
+    def get_ysuid():
+        return '%d%s' % (int(time.time()), ''.join([
+            random.choice(string.ascii_letters) for i in range(3)]))
+
     def get_hd(self, fm):
         hd_id_dict = {
             '3gp': '0',
@@ -189,6 +197,8 @@ class YoukuIE(InfoExtractor):
     def _real_extract(self, url):
         video_id = self._match_id(url)
 
+        self._set_cookie('youku.com', '__ysuid', self.get_ysuid())
+
         def retrieve_data(req_url, note):
             headers = {
                 'Referer': req_url,
@@ -221,7 +231,7 @@ class YoukuIE(InfoExtractor):
                     'Youku said: Sorry, this video is available in China only', expected=True)
             else:
                 msg = 'Youku server reported error %i' % error.get('code')
-                if error is not None:
+                if error_note is not None:
                     msg += ': ' + error_note
                 raise ExtractorError(msg)
 

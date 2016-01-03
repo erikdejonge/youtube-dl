@@ -7,10 +7,10 @@ import itertools
 
 from .common import InfoExtractor
 
-from ..compat import compat_str
 from ..utils import (
-    ExtractorError,
     determine_ext,
+    error_to_compat_str,
+    ExtractorError,
     int_or_none,
     parse_iso8601,
     sanitized_Request,
@@ -148,15 +148,11 @@ class DailymotionIE(DailymotionBaseInfoExtractor):
                         continue
                     ext = determine_ext(media_url)
                     if type_ == 'application/x-mpegURL' or ext == 'm3u8':
-                        m3u8_formats = self._extract_m3u8_formats(
-                            media_url, video_id, 'mp4', m3u8_id='hls', fatal=False)
-                        if m3u8_formats:
-                            formats.extend(m3u8_formats)
+                        formats.extend(self._extract_m3u8_formats(
+                            media_url, video_id, 'mp4', m3u8_id='hls', fatal=False))
                     elif type_ == 'application/f4m' or ext == 'f4m':
-                        f4m_formats = self._extract_f4m_formats(
-                            media_url, video_id, preference=-1, f4m_id='hds', fatal=False)
-                        if f4m_formats:
-                            formats.extend(f4m_formats)
+                        formats.extend(self._extract_f4m_formats(
+                            media_url, video_id, preference=-1, f4m_id='hds', fatal=False))
                     else:
                         f = {
                             'url': media_url,
@@ -278,7 +274,7 @@ class DailymotionIE(DailymotionBaseInfoExtractor):
                 'https://api.dailymotion.com/video/%s/subtitles?fields=id,language,url' % video_id,
                 video_id, note=False)
         except ExtractorError as err:
-            self._downloader.report_warning('unable to download video subtitles: %s' % compat_str(err))
+            self._downloader.report_warning('unable to download video subtitles: %s' % error_to_compat_str(err))
             return {}
         info = json.loads(sub_list)
         if (info['total'] > 0):

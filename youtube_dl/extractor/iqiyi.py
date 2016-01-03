@@ -16,7 +16,7 @@ class IqiyiIE(InfoExtractor):
     IE_NAME = 'iqiyi'
     IE_DESC = '爱奇艺'
 
-    _VALID_URL = r'http://(?:www\.)iqiyi.com/v_.+?\.html'
+    _VALID_URL = r'http://(?:[^.]+\.)?iqiyi\.com/.+\.html'
 
     _TESTS = [{
         'url': 'http://www.iqiyi.com/v_19rrojlavg.html',
@@ -84,6 +84,15 @@ class IqiyiIE(InfoExtractor):
         'params': {
             'skip_download': True,
         },
+    }, {
+        'url': 'http://www.iqiyi.com/w_19rt6o8t9p.html',
+        'only_matching': True,
+    }, {
+        'url': 'http://www.iqiyi.com/a_19rrhbc6kt.html',
+        'only_matching': True,
+    }, {
+        'url': 'http://yule.iqiyi.com/pcb.html',
+        'only_matching': True,
     }]
 
     _FORMATS_MAP = [
@@ -205,8 +214,8 @@ class IqiyiIE(InfoExtractor):
 
     def get_enc_key(self, swf_url, video_id):
         # TODO: automatic key extraction
-        # last update at 2015-12-06 for Zombie::bite
-        enc_key = '3719f6a1da83ee0aee3488d8802d7696'[::-1]
+        # last update at 2015-12-18 for Zombie::bite
+        enc_key = '8b6b683780897eb8d9a48a02ccc4817d'[::-1]
         return enc_key
 
     def _real_extract(self, url):

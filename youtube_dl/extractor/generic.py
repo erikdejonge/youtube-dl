@@ -44,7 +44,6 @@ from .myvi import MyviIE
 from .condenast import CondeNastIE
 from .udn import UDNEmbedIE
 from .senateisvp import SenateISVPIE
-from .bliptv import BlipTVIE
 from .svt import SVTIE
 from .pornhub import PornHubIE
 from .xhamster import XHamsterEmbedIE
@@ -55,6 +54,10 @@ from .snagfilms import SnagFilmsEmbedIE
 from .screenwavemedia import ScreenwaveMediaIE
 from .mtv import MTVServicesEmbeddedIE
 from .pladform import PladformIE
+from .videomore import VideomoreIE
+from .googledrive import GoogleDriveIE
+from .jwplatform import JWPlatformIE
+from .ultimedia import UltimediaIE
 
 
 class GenericIE(InfoExtractor):
@@ -1440,11 +1443,6 @@ class GenericIE(InfoExtractor):
                 'id': match.group('id')
             }
 
-        # Look for embedded blip.tv player
-        bliptv_url = BlipTVIE._extract_url(webpage)
-        if bliptv_url:
-            return self.url_result(bliptv_url, 'BlipTV')
-
         # Look for SVT player
         svt_url = SVTIE._extract_url(webpage)
         if svt_url:
@@ -1746,6 +1744,11 @@ class GenericIE(InfoExtractor):
         if pladform_url:
             return self.url_result(pladform_url)
 
+        # Look for Videomore embeds
+        videomore_url = VideomoreIE._extract_url(webpage)
+        if videomore_url:
+            return self.url_result(videomore_url)
+
         # Look for Playwire embeds
         mobj = re.search(
             r'<script[^>]+data-config=(["\'])(?P<url>(?:https?:)?//config\.playwire\.com/.+?)\1', webpage)
@@ -1768,6 +1771,11 @@ class GenericIE(InfoExtractor):
         nbc_sports_url = NBCSportsVPlayerIE._extract_url(webpage)
         if nbc_sports_url:
             return self.url_result(nbc_sports_url, 'NBCSportsVPlayer')
+
+        # Look for Google Drive embeds
+        google_drive_url = GoogleDriveIE._extract_url(webpage)
+        if google_drive_url:
+            return self.url_result(google_drive_url, 'GoogleDrive')
 
         # Look for UDN embeds
         mobj = re.search(
@@ -1796,10 +1804,20 @@ class GenericIE(InfoExtractor):
         if snagfilms_url:
             return self.url_result(snagfilms_url)
 
+        # Look for JWPlatform embeds
+        jwplatform_url = JWPlatformIE._extract_url(webpage)
+        if jwplatform_url:
+            return self.url_result(jwplatform_url, 'JWPlatform')
+
         # Look for ScreenwaveMedia embeds
         mobj = re.search(ScreenwaveMediaIE.EMBED_PATTERN, webpage)
         if mobj is not None:
             return self.url_result(unescapeHTML(mobj.group('url')), 'ScreenwaveMedia')
+
+        # Look for Ulltimedia embeds
+        ultimedia_url = UltimediaIE._extract_url(webpage)
+        if ultimedia_url:
+            return self.url_result(self._proto_relative_url(ultimedia_url), 'Ultimedia')
 
         # Look for AdobeTVVideo embeds
         mobj = re.search(
