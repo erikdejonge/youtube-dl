@@ -299,6 +299,7 @@ from .ivi import (
     IviIE,
     IviCompilationIE
 )
+from .ivideon import IvideonIE
 from .izlesene import IzleseneIE
 from .jadorecettepub import JadoreCettePubIE
 from .jeuxvideo import JeuxVideoIE
@@ -473,6 +474,7 @@ from .npo import (
     VPROIE,
     WNLIE
 )
+from .npr import NprIE
 from .nrk import (
     NRKIE,
     NRKPlaylistIE,
