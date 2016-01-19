@@ -706,6 +706,9 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
         },
         {
             # Title with JS-like syntax "};" (see https://github.com/rg3/youtube-dl/issues/7468)
+            # Also tests cut-off URL expansion in video description (see
+            # https://github.com/rg3/youtube-dl/issues/1892,
+            # https://github.com/rg3/youtube-dl/issues/8164)
             'url': 'https://www.youtube.com/watch?v=lsguqyKfVQg',
             'info_dict': {
                 'id': 'lsguqyKfVQg',
@@ -1237,7 +1240,7 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
                     (?:[a-zA-Z-]+="[^"]+"\s+)*?
                     (?:title|href)="([^"]+)"\s+
                     (?:[a-zA-Z-]+="[^"]+"\s+)*?
-                    class="(?:yt-uix-redirect-link|yt-uix-sessionlink[^"]*)".*?>
+                    class="(?:yt-uix-redirect-link|yt-uix-sessionlink[^"]*)"[^>]*>
                 [^<]+\.{3}\s*
                 </a>
             ''', r'\1', video_description)
@@ -1487,7 +1490,7 @@ class YoutubeIE(YoutubeBaseInfoExtractor):
                             if codecs:
                                 codecs = codecs.split(',')
                                 if len(codecs) == 2:
-                                    acodec, vcodec = codecs[0], codecs[1]
+                                    acodec, vcodec = codecs[1], codecs[0]
                                 else:
                                     acodec, vcodec = (codecs[0], 'none') if kind == 'audio' else ('none', codecs[0])
                                 dct.update({

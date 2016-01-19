@@ -24,6 +24,7 @@
  - **AdobeTVShow**
  - **AdobeTVVideo**
  - **AdultSwim**
+ - **AE**
  - **Aftonbladet**
  - **AirMozilla**
  - **AlJazeera**
@@ -65,6 +66,7 @@
  - **Beeg**
  - **BehindKink**
  - **Bet**
+ - **Bigflix**
  - **Bild**: Bild.de
  - **BiliBili**
  - **BleacherReport**
@@ -84,6 +86,7 @@
  - **CamdemyFolder**
  - **canalc2.tv**
  - **Canalplus**: canalplus.fr, piwiplus.fr and d8.tv
+ - **Canvas**
  - **CBS**
  - **CBSNews**: CBS News
  - **CBSSports**
@@ -121,6 +124,7 @@
  - **CSpan**: C-SPAN
  - **CtsNews**: 華視新聞
  - **culturebox.francetvinfo.fr**
+ - **CWTV**
  - **dailymotion**
  - **dailymotion:playlist**
  - **dailymotion:user**
@@ -228,7 +232,6 @@
  - **Helsinki**: helsinki.fi
  - **HentaiStigma**
  - **HistoricFilms**
- - **History**
  - **hitbox**
  - **hitbox:live**
  - **HornBunny**
@@ -251,7 +254,7 @@
  - **Instagram**
  - **instagram:user**: Instagram user profile
  - **InternetVideoArchive**
- - **IPrima**
+ - **IPrima** (Currently broken)
  - **iqiyi**: 爱奇艺
  - **Ir90Tv**
  - **ivi**: ivi.ru
@@ -602,7 +605,9 @@
  - **TruTube**
  - **Tube8**
  - **TubiTv**
- - **Tudou**
+ - **tudou**
+ - **tudou:album**
+ - **tudou:playlist**
  - **Tumblr**
  - **tunein:clip**
  - **tunein:program**
@@ -655,12 +660,12 @@
  - **video.mit.edu**
  - **VideoDetective**
  - **videofy.me**
- - **VideoMega**
+ - **VideoMega** (Currently broken)
  - **videomore**
  - **videomore:season**
  - **videomore:video**
  - **VideoPremium**
- - **VideoTt**: video.tt - Your True Tube
+ - **VideoTt**: video.tt - Your True Tube (Currently broken)
  - **videoweed**: VideoWeed
  - **Vidme**
  - **Vidzi**
