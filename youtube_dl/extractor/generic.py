@@ -47,6 +47,7 @@ from .senateisvp import SenateISVPIE
 from .svt import SVTIE
 from .pornhub import PornHubIE
 from .xhamster import XHamsterEmbedIE
+from .tnaflix import TNAFlixNetworkEmbedIE
 from .vimeo import VimeoIE
 from .dailymotion import DailymotionCloudIE
 from .onionstudios import OnionStudiosIE
@@ -57,7 +58,9 @@ from .pladform import PladformIE
 from .videomore import VideomoreIE
 from .googledrive import GoogleDriveIE
 from .jwplatform import JWPlatformIE
-from .ultimedia import UltimediaIE
+from .digiteka import DigitekaIE
+from .instagram import InstagramIE
+from .liveleak import LiveLeakIE
 
 
 class GenericIE(InfoExtractor):
@@ -102,7 +105,8 @@ class GenericIE(InfoExtractor):
                 'skip_download': True,  # infinite live stream
             },
             'expected_warnings': [
-                r'501.*Not Implemented'
+                r'501.*Not Implemented',
+                r'400.*Bad Request',
             ],
         },
         # Direct link with incorrect MIME type
@@ -223,6 +227,50 @@ class GenericIE(InfoExtractor):
             'params': {
                 'skip_download': True,
             },
+        },
+        # MPD from http://dash-mse-test.appspot.com/media.html
+        {
+            'url': 'http://yt-dash-mse-test.commondatastorage.googleapis.com/media/car-20120827-manifest.mpd',
+            'md5': '4b57baab2e30d6eb3a6a09f0ba57ef53',
+            'info_dict': {
+                'id': 'car-20120827-manifest',
+                'ext': 'mp4',
+                'title': 'car-20120827-manifest',
+                'formats': 'mincount:9',
+                'upload_date': '20130904',
+            },
+            'params': {
+                'format': 'bestvideo',
+            },
+        },
+        # m3u8 served with Content-Type: audio/x-mpegURL; charset=utf-8
+        {
+            'url': 'http://once.unicornmedia.com/now/master/playlist/bb0b18ba-64f5-4b1b-a29f-0ac252f06b68/77a785f3-5188-4806-b788-0893a61634ed/93677179-2d99-4ef4-9e17-fe70d49abfbf/content.m3u8',
+            'info_dict': {
+                'id': 'content',
+                'ext': 'mp4',
+                'title': 'content',
+                'formats': 'mincount:8',
+            },
+            'params': {
+                # m3u8 downloads
+                'skip_download': True,
+            }
+        },
+        # m3u8 served with Content-Type: text/plain
+        {
+            'url': 'http://www.nacentapps.com/m3u8/index.m3u8',
+            'info_dict': {
+                'id': 'index',
+                'ext': 'mp4',
+                'title': 'index',
+                'upload_date': '20140720',
+                'formats': 'mincount:11',
+            },
+            'params': {
+                # m3u8 downloads
+                'skip_download': True,
+            }
         },
         # google redirect
         {
@@ -360,19 +408,6 @@ class GenericIE(InfoExtractor):
             'params': {
                 'skip_download': True,
             },
-        },
-        # multiple ooyala embeds on SBN network websites
-        {
-            'url': 'http://www.sbnation.com/college-football-recruiting/2015/2/3/7970291/national-signing-day-rationalizations-itll-be-ok-itll-be-ok',
-            'info_dict': {
-                'id': 'national-signing-day-rationalizations-itll-be-ok-itll-be-ok',
-                'title': '25 lies you will tell yourself on National Signing Day - SBNation.com',
-            },
-            'playlist_mincount': 3,
-            'params': {
-                'skip_download': True,
-            },
-            'add_ie': ['Ooyala'],
         },
         # embed.ly video
         {
@@ -562,7 +597,11 @@ class GenericIE(InfoExtractor):
                 'id': 'k2mm4bCdJ6CQ2i7c8o2',
                 'ext': 'mp4',
                 'title': 'Le Zap de Spi0n n°216 - Zapping du Web',
+                'description': 'md5:faf028e48a461b8b7fad38f1e104b119',
                 'uploader': 'Spi0n',
+                'uploader_id': 'xgditw',
+                'upload_date': '20140425',
+                'timestamp': 1398441542,
             },
             'add_ie': ['Dailymotion'],
         },
@@ -695,8 +734,11 @@ class GenericIE(InfoExtractor):
                 'id': 'uxjb0lwrcz',
                 'ext': 'mp4',
                 'title': 'Conversation about Hexagonal Rails Part 1 - ThoughtWorks',
+                'description': 'a Martin Fowler video from ThoughtWorks',
                 'duration': 1715.0,
                 'uploader': 'thoughtworks.wistia.com',
+                'upload_date': '20140603',
+                'timestamp': 1401832161,
             },
         },
         # Soundcloud embed
@@ -845,6 +887,7 @@ class GenericIE(InfoExtractor):
         # Eagle.Platform embed (generic URL)
         {
             'url': 'http://lenta.ru/news/2015/03/06/navalny/',
+            # Not checking MD5 as sometimes the direct HTTP link results in 404 and HLS is used
             'info_dict': {
                 'id': '227304',
                 'ext': 'mp4',
@@ -859,6 +902,7 @@ class GenericIE(InfoExtractor):
         # ClipYou (Eagle.Platform) embed (custom URL)
         {
             'url': 'http://muz-tv.ru/play/7129/',
+            # Not checking MD5 as sometimes the direct HTTP link results in 404 and HLS is used
             'info_dict': {
                 'id': '12820',
                 'ext': 'mp4',
@@ -947,6 +991,9 @@ class GenericIE(InfoExtractor):
                 'ext': 'flv',
                 'title': "PFT Live: New leader in the 'new-look' defense",
                 'description': 'md5:65a19b4bbfb3b0c0c5768bed1dfad74e',
+                'uploader': 'NBCU-SPORTS',
+                'upload_date': '20140107',
+                'timestamp': 1389118457,
             },
         },
         # UDN embed
@@ -999,6 +1046,9 @@ class GenericIE(InfoExtractor):
                 'title': 'SN Presents: Russell Martin, World Citizen',
                 'description': 'To understand why he was the Toronto Blue Jays’ top off-season priority is to appreciate his background and upbringing in Montreal, where he first developed his baseball skills. Written and narrated by Stephen Brunt.',
                 'uploader': 'Rogers Sportsnet',
+                'uploader_id': '1704050871',
+                'upload_date': '20150525',
+                'timestamp': 1432570283,
             },
         },
         # Dailymotion Cloud video
@@ -1079,7 +1129,50 @@ class GenericIE(InfoExtractor):
                 # m3u8 downloads
                 'skip_download': True,
             }
-        }
+        },
+        # Brightcove embed, with no valid 'renditions' but valid 'IOSRenditions'
+        # This video can't be played in browsers if Flash disabled and UA set to iPhone, which is actually a false alarm
+        {
+            'url': 'https://dl.dropboxusercontent.com/u/29092637/interview.html',
+            'info_dict': {
+                'id': '4785848093001',
+                'ext': 'mp4',
+                'title': 'The Cardinal Pell Interview',
+                'description': 'Sky News Contributor Andrew Bolt interviews George Pell in Rome, following the Cardinal\'s evidence before the Royal Commission into Child Abuse. ',
+                'uploader': 'GlobeCast Australia - GlobeStream',
+                'uploader_id': '2733773828001',
+                'upload_date': '20160304',
+                'timestamp': 1457083087,
+            },
+            'params': {
+                # m3u8 downloads
+                'skip_download': True,
+            },
+        },
+        # Another form of arte.tv embed
+        {
+            'url': 'http://www.tv-replay.fr/redirection/09-04-16/arte-reportage-arte-11508975.html',
+            'md5': '850bfe45417ddf221288c88a0cffe2e2',
+            'info_dict': {
+                'id': '030273-562_PLUS7-F',
+                'ext': 'mp4',
+                'title': 'ARTE Reportage - Nulle part, en France',
+                'description': 'md5:e3a0e8868ed7303ed509b9e3af2b870d',
+                'upload_date': '20160409',
+            },
+        },
+        # LiveLeak embed
+        {
+            'url': 'http://www.wykop.pl/link/3088787/',
+            'md5': 'ace83b9ed19b21f68e1b50e844fdf95d',
+            'info_dict': {
+                'id': '874_1459135191',
+                'ext': 'mp4',
+                'title': 'Man shows poor quality of new apartment building',
+                'description': 'The wall is like a sand pile.',
+                'uploader': 'Lake8737',
+            }
+        },
     ]
 
     def report_following_redirect(self, new_url):
@@ -1227,23 +1320,31 @@ class GenericIE(InfoExtractor):
             full_response = self._request_webpage(request, video_id)
             head_response = full_response
 
+        info_dict = {
+            'id': video_id,
+            'title': compat_urllib_parse_unquote(os.path.splitext(url_basename(url))[0]),
+            'upload_date': unified_strdate(head_response.headers.get('Last-Modified'))
+        }
+
         # Check for direct link to a video
-        content_type = head_response.headers.get('Content-Type', '')
-        m = re.match(r'^(?P<type>audio|video|application(?=/ogg$))/(?P<format_id>.+)$', content_type)
+        content_type = head_response.headers.get('Content-Type', '').lower()
+        m = re.match(r'^(?P<type>audio|video|application(?=/(?:ogg$|(?:vnd\.apple\.|x-)?mpegurl)))/(?P<format_id>[^;\s]+)', content_type)
         if m:
-            upload_date = unified_strdate(
-                head_response.headers.get('Last-Modified'))
-            return {
-                'id': video_id,
-                'title': compat_urllib_parse_unquote(os.path.splitext(url_basename(url))[0]),
-                'direct': True,
-                'formats': [{
+            format_id = m.group('format_id')
+            if format_id.endswith('mpegurl'):
+                formats = self._extract_m3u8_formats(url, video_id, 'mp4')
+            elif format_id == 'f4m':
+                formats = self._extract_f4m_formats(url, video_id)
+            else:
+                formats = [{
                     'format_id': m.group('format_id'),
                     'url': url,
                     'vcodec': 'none' if m.group('type') == 'audio' else None
-                }],
-                'upload_date': upload_date,
-            }
+                }]
+                info_dict['direct'] = True
+            self._sort_formats(formats)
+            info_dict['formats'] = formats
+            return info_dict
 
         if not self._downloader.params.get('test', False) and not is_intentional:
             force = self._downloader.params.get('force_generic_extractor', False)
@@ -1263,36 +1364,50 @@ class GenericIE(InfoExtractor):
             request.add_header('Accept-Encoding', '*')
             full_response = self._request_webpage(request, video_id)
 
+        first_bytes = full_response.read(512)
+
+        # Is it an M3U playlist?
+        if first_bytes.startswith(b'#EXTM3U'):
+            info_dict['formats'] = self._extract_m3u8_formats(url, video_id, 'mp4')
+            self._sort_formats(info_dict['formats'])
+            return info_dict
+
         # Maybe it's a direct link to a video?
         # Be careful not to download the whole thing!
-        first_bytes = full_response.read(512)
         if not is_html(first_bytes):
             self._downloader.report_warning(
                 'URL could be a direct video link, returning it as such.')
-            upload_date = unified_strdate(
-                head_response.headers.get('Last-Modified'))
-            return {
-                'id': video_id,
-                'title': compat_urllib_parse_unquote(os.path.splitext(url_basename(url))[0]),
+            info_dict.update({
                 'direct': True,
                 'url': url,
-                'upload_date': upload_date,
-            }
+            })
+            return info_dict
 
         webpage = self._webpage_read_content(
             full_response, url, video_id, prefix=first_bytes)
 
         self.report_extraction(video_id)
 
-        # Is it an RSS feed, a SMIL file or a XSPF playlist?
+        # Is it an RSS feed, a SMIL file, an XSPF playlist or a MPD manifest?
         try:
             doc = compat_etree_fromstring(webpage.encode('utf-8'))
             if doc.tag == 'rss':
                 return self._extract_rss(url, video_id, doc)
             elif re.match(r'^(?:{[^}]+})?smil$', doc.tag):
-                return self._parse_smil(doc, url, video_id)
+                smil = self._parse_smil(doc, url, video_id)
+                self._sort_formats(smil['formats'])
+                return smil
             elif doc.tag == '{http://xspf.org/ns/0/}playlist':
                 return self.playlist_result(self._parse_xspf(doc, video_id), video_id)
+            elif re.match(r'(?i)^(?:{[^}]+})?MPD$', doc.tag):
+                info_dict['formats'] = self._parse_mpd_formats(
+                    doc, video_id, mpd_base_url=url.rpartition('/')[0])
+                self._sort_formats(info_dict['formats'])
+                return info_dict
+            elif re.match(r'^{http://ns\.adobe\.com/f4m/[12]\.0}manifest$', doc.tag):
+                info_dict['formats'] = self._parse_f4m_formats(doc, url, video_id)
+                self._sort_formats(info_dict['formats'])
+                return info_dict
         except compat_xml_parse_error:
             pass
 
@@ -1402,7 +1517,7 @@ class GenericIE(InfoExtractor):
 
         # Look for embedded Dailymotion player
         matches = re.findall(
-            r'<iframe[^>]+?src=(["\'])(?P<url>(?:https?:)?//(?:www\.)?dailymotion\.com/embed/video/.+?)\1', webpage)
+            r'<(?:(?:embed|iframe)[^>]+?src=|input[^>]+id=[\'"]dmcloudUrlEmissionSelect[\'"][^>]+value=)(["\'])(?P<url>(?:https?:)?//(?:www\.)?dailymotion\.com/(?:embed|swf)/video/.+?)\1', webpage)
         if matches:
             return _playlist_from_matches(
                 matches, lambda m: unescapeHTML(m[1]))
@@ -1547,6 +1662,11 @@ class GenericIE(InfoExtractor):
         if mobj is not None:
             return self.url_result(mobj.group('url'), 'VK')
 
+        # Look for embedded Odnoklassniki player
+        mobj = re.search(r'<iframe[^>]+?src=(["\'])(?P<url>https?://(?:odnoklassniki|ok)\.ru/videoembed/.+?)\1', webpage)
+        if mobj is not None:
+            return self.url_result(mobj.group('url'), 'Odnoklassniki')
+
         # Look for embedded ivi player
         mobj = re.search(r'<embed[^>]+?src=(["\'])(?P<url>https?://(?:www\.)?ivi\.ru/video/player.+?)\1', webpage)
         if mobj is not None:
@@ -1602,6 +1722,11 @@ class GenericIE(InfoExtractor):
         if xhamster_urls:
             return _playlist_from_matches(xhamster_urls, ie='XHamsterEmbed')
 
+        # Look for embedded TNAFlixNetwork player
+        tnaflix_urls = TNAFlixNetworkEmbedIE._extract_urls(webpage)
+        if tnaflix_urls:
+            return _playlist_from_matches(tnaflix_urls, ie=TNAFlixNetworkEmbedIE.ie_key())
+
         # Look for embedded Tvigle player
         mobj = re.search(
             r'<iframe[^>]+?src=(["\'])(?P<url>(?:https?:)?//cloud\.tvigle\.ru/video/.+?)\1', webpage)
@@ -1622,7 +1747,7 @@ class GenericIE(InfoExtractor):
 
         # Look for embedded arte.tv player
         mobj = re.search(
-            r'<script [^>]*?src="(?P<url>http://www\.arte\.tv/playerv2/embed[^"]+)"',
+            r'<(?:script|iframe) [^>]*?src="(?P<url>http://www\.arte\.tv/(?:playerv2/embed|arte_vp/index)[^"]+)"',
             webpage)
         if mobj is not None:
             return self.url_result(mobj.group('url'), 'ArteTVEmbed')
@@ -1814,10 +1939,21 @@ class GenericIE(InfoExtractor):
         if mobj is not None:
             return self.url_result(unescapeHTML(mobj.group('url')), 'ScreenwaveMedia')
 
-        # Look for Ulltimedia embeds
-        ultimedia_url = UltimediaIE._extract_url(webpage)
-        if ultimedia_url:
-            return self.url_result(self._proto_relative_url(ultimedia_url), 'Ultimedia')
+        # Look for Digiteka embeds
+        digiteka_url = DigitekaIE._extract_url(webpage)
+        if digiteka_url:
+            return self.url_result(self._proto_relative_url(digiteka_url), DigitekaIE.ie_key())
+
+        # Look for Limelight embeds
+        mobj = re.search(r'LimelightPlayer\.doLoad(Media|Channel|ChannelList)\(["\'](?P<id>[a-z0-9]{32})', webpage)
+        if mobj:
+            lm = {
+                'Media': 'media',
+                'Channel': 'channel',
+                'ChannelList': 'channel_list',
+            }
+            return self.url_result('limelight:%s:%s' % (
+                lm[mobj.group(1)], mobj.group(2)), 'Limelight%s' % mobj.group(1), mobj.group(2))
 
         # Look for AdobeTVVideo embeds
         mobj = re.search(
@@ -1827,6 +1963,25 @@ class GenericIE(InfoExtractor):
             return self.url_result(
                 self._proto_relative_url(unescapeHTML(mobj.group(1))),
                 'AdobeTVVideo')
+
+        # Look for Vine embeds
+        mobj = re.search(
+            r'<iframe[^>]+src=[\'"]((?:https?:)?//(?:www\.)?vine\.co/v/[^/]+/embed/(?:simple|postcard))',
+            webpage)
+        if mobj is not None:
+            return self.url_result(
+                self._proto_relative_url(unescapeHTML(mobj.group(1))), 'Vine')
+
+        # Look for Instagram embeds
+        instagram_embed_url = InstagramIE._extract_embed_url(webpage)
+        if instagram_embed_url is not None:
+            return self.url_result(
+                self._proto_relative_url(instagram_embed_url), InstagramIE.ie_key())
+
+        # Look for LiveLeak embeds
+        liveleak_url = LiveLeakIE._extract_url(webpage)
+        if liveleak_url:
+            return self.url_result(liveleak_url, 'LiveLeak')
 
         def check_video(vurl):
             if YoutubeIE.suitable(vurl):
@@ -1909,6 +2064,7 @@ class GenericIE(InfoExtractor):
 
         entries = []
         for video_url in found:
+            video_url = unescapeHTML(video_url)
             video_url = video_url.replace('\\/', '/')
             video_url = compat_urlparse.urljoin(url, video_url)
             video_id = compat_urllib_parse_unquote(os.path.basename(video_url))
@@ -1935,8 +2091,15 @@ class GenericIE(InfoExtractor):
                 return self.playlist_result(self._extract_xspf_playlist(video_url, video_id), video_id)
             elif ext == 'm3u8':
                 entry_info_dict['formats'] = self._extract_m3u8_formats(video_url, video_id, ext='mp4')
+            elif ext == 'mpd':
+                entry_info_dict['formats'] = self._extract_mpd_formats(video_url, video_id)
+            elif ext == 'f4m':
+                entry_info_dict['formats'] = self._extract_f4m_formats(video_url, video_id)
             else:
                 entry_info_dict['url'] = video_url
+
+            if entry_info_dict.get('formats'):
+                self._sort_formats(entry_info_dict['formats'])
 
             entries.append(entry_info_dict)
 

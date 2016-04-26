@@ -2,17 +2,17 @@
 from __future__ import unicode_literals
 
 import re
+import functools
 
 from .common import InfoExtractor
 from ..compat import compat_str
-from ..utils import int_or_none
+from ..utils import (
+    int_or_none,
+    OnDemandPagedList,
+)
 
 
-class ACastBaseIE(InfoExtractor):
-    _API_BASE_URL = 'https://www.acast.com/api/'
-
-
-class ACastIE(ACastBaseIE):
+class ACastIE(InfoExtractor):
     IE_NAME = 'acast'
     _VALID_URL = r'https?://(?:www\.)?acast\.com/(?P<channel>[^/]+)/(?P<id>[^/#?]+)'
     _TEST = {
@@ -23,15 +23,15 @@ class ACastIE(ACastBaseIE):
             'ext': 'mp3',
             'title': '"Where Are You?": Taipei 101, Taiwan',
             'timestamp': 1196172000000,
-            'description': 'md5:0c5d8201dfea2b93218ea986c91eee6e',
+            'description': 'md5:a0b4ef3634e63866b542e5b1199a1a0e',
             'duration': 211,
         }
     }
 
     def _real_extract(self, url):
         channel, display_id = re.match(self._VALID_URL, url).groups()
-        cast_data = self._download_json(self._API_BASE_URL + 'channels/%s/acasts/%s/playback' % (channel, display_id), display_id)
-
+        cast_data = self._download_json(
+            'https://embed.acast.com/api/acasts/%s/%s' % (channel, display_id), display_id)
         return {
             'id': compat_str(cast_data['id']),
             'display_id': display_id,
@@ -44,7 +44,7 @@ class ACastIE(ACastBaseIE):
         }
 
 
-class ACastChannelIE(ACastBaseIE):
+class ACastChannelIE(InfoExtractor):
     IE_NAME = 'acast:channel'
     _VALID_URL = r'https?://(?:www\.)?acast\.com/(?P<id>[^/#?]+)'
     _TEST = {
@@ -56,15 +56,27 @@ class ACastChannelIE(ACastBaseIE):
         },
         'playlist_mincount': 20,
     }
+    _API_BASE_URL = 'https://www.acast.com/api/'
+    _PAGE_SIZE = 10
 
     @classmethod
     def suitable(cls, url):
         return False if ACastIE.suitable(url) else super(ACastChannelIE, cls).suitable(url)
 
-    def _real_extract(self, url):
-        display_id = self._match_id(url)
-        channel_data = self._download_json(self._API_BASE_URL + 'channels/%s' % display_id, display_id)
-        casts = self._download_json(self._API_BASE_URL + 'channels/%s/acasts' % display_id, display_id)
-        entries = [self.url_result('https://www.acast.com/%s/%s' % (display_id, cast['url']), 'ACast') for cast in casts]
+    def _fetch_page(self, channel_slug, page):
+        casts = self._download_json(
+            self._API_BASE_URL + 'channels/%s/acasts?page=%s' % (channel_slug, page),
+            channel_slug, note='Download page %d of channel data' % page)
+        for cast in casts:
+            yield self.url_result(
+                'https://www.acast.com/%s/%s' % (channel_slug, cast['url']),
+                'ACast', cast['id'])
 
-        return self.playlist_result(entries, compat_str(channel_data['id']), channel_data['name'], channel_data.get('description'))
+    def _real_extract(self, url):
+        channel_slug = self._match_id(url)
+        channel_data = self._download_json(
+            self._API_BASE_URL + 'channels/%s' % channel_slug, channel_slug)
+        entries = OnDemandPagedList(functools.partial(
+            self._fetch_page, channel_slug), self._PAGE_SIZE)
+        return self.playlist_result(entries, compat_str(
+            channel_data['id']), channel_data['name'], channel_data.get('description'))

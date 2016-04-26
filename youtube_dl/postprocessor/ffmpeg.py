@@ -25,6 +25,19 @@ from ..utils import (
 )
 
 
+EXT_TO_OUT_FORMATS = {
+    "aac": "adts",
+    "m4a": "ipod",
+    "mka": "matroska",
+    "mkv": "matroska",
+    "mpg": "mpeg",
+    "ogv": "ogg",
+    "ts": "mpegts",
+    "wma": "asf",
+    "wmv": "asf",
+}
+
+
 class FFmpegPostProcessorError(PostProcessingError):
     pass
 
@@ -162,7 +175,8 @@ class FFmpegPostProcessor(PostProcessor):
         # Always use 'file:' because the filename may contain ':' (ffmpeg
         # interprets that as a protocol) or can start with '-' (-- is broken in
         # ffmpeg, see https://ffmpeg.org/trac/ffmpeg/ticket/2127 for details)
-        return 'file:' + fn
+        # Also leave '-' intact in order not to break streaming to stdout.
+        return 'file:' + fn if fn != '-' else fn
 
 
 class FFmpegExtractAudioPP(FFmpegPostProcessor):
@@ -318,17 +332,34 @@ class FFmpegVideoConvertorPP(FFmpegPostProcessor):
 
 class FFmpegEmbedSubtitlePP(FFmpegPostProcessor):
     def run(self, information):
-        if information['ext'] not in ['mp4', 'mkv']:
-            self._downloader.to_screen('[ffmpeg] Subtitles can only be embedded in mp4 or mkv files')
+        if information['ext'] not in ('mp4', 'webm', 'mkv'):
+            self._downloader.to_screen('[ffmpeg] Subtitles can only be embedded in mp4, webm or mkv files')
             return [], information
         subtitles = information.get('requested_subtitles')
         if not subtitles:
             self._downloader.to_screen('[ffmpeg] There aren\'t any subtitles to embed')
             return [], information
 
-        sub_langs = list(subtitles.keys())
         filename = information['filepath']
-        sub_filenames = [subtitles_filename(filename, lang, sub_info['ext']) for lang, sub_info in subtitles.items()]
+
+        ext = information['ext']
+        sub_langs = []
+        sub_filenames = []
+        webm_vtt_warn = False
+
+        for lang, sub_info in subtitles.items():
+            sub_ext = sub_info['ext']
+            if ext != 'webm' or ext == 'webm' and sub_ext == 'vtt':
+                sub_langs.append(lang)
+                sub_filenames.append(subtitles_filename(filename, lang, sub_ext))
+            else:
+                if not webm_vtt_warn and ext == 'webm' and sub_ext != 'vtt':
+                    webm_vtt_warn = True
+                    self._downloader.to_screen('[ffmpeg] Only WebVTT subtitles can be embedded in webm files')
+
+        if not sub_langs:
+            return [], information
+
         input_files = [filename] + sub_filenames
 
         opts = [
@@ -463,6 +494,21 @@ class FFmpegFixupM4aPP(FFmpegPostProcessor):
         return [], info
 
 
+class FFmpegFixupM3u8PP(FFmpegPostProcessor):
+    def run(self, info):
+        filename = info['filepath']
+        temp_filename = prepend_extension(filename, 'temp')
+
+        options = ['-c', 'copy', '-f', 'mp4', '-bsf:a', 'aac_adtstoasc']
+        self._downloader.to_screen('[ffmpeg] Fixing malformated aac bitstream in "%s"' % filename)
+        self.run_ffmpeg(filename, temp_filename, options)
+
+        os.remove(encodeFilename(filename))
+        os.rename(encodeFilename(temp_filename), encodeFilename(filename))
+
+        return [], info
+
+
 class FFmpegSubtitlesConvertorPP(FFmpegPostProcessor):
     def __init__(self, downloader=None, format=None):
         super(FFmpegSubtitlesConvertorPP, self).__init__(downloader)
@@ -479,6 +525,7 @@ class FFmpegSubtitlesConvertorPP(FFmpegPostProcessor):
             self._downloader.to_screen('[ffmpeg] There aren\'t any subtitles to convert')
             return [], info
         self._downloader.to_screen('[ffmpeg] Converting subtitles')
+        sub_filenames = []
         for lang, sub in subs.items():
             ext = sub['ext']
             if ext == new_ext:
@@ -486,14 +533,16 @@ class FFmpegSubtitlesConvertorPP(FFmpegPostProcessor):
                     '[ffmpeg] Subtitle file for %s is already in the requested'
                     'format' % new_ext)
                 continue
+            old_file = subtitles_filename(filename, lang, ext)
+            sub_filenames.append(old_file)
             new_file = subtitles_filename(filename, lang, new_ext)
 
-            if ext == 'dfxp' or ext == 'ttml':
+            if ext == 'dfxp' or ext == 'ttml' or ext == 'tt':
                 self._downloader.report_warning(
                     'You have requested to convert dfxp (TTML) subtitles into another format, '
                     'which results in style information loss')
 
-                dfxp_file = subtitles_filename(filename, lang, ext)
+                dfxp_file = old_file
                 srt_file = subtitles_filename(filename, lang, 'srt')
 
                 with io.open(dfxp_file, 'rt', encoding='utf-8') as f:
@@ -501,8 +550,8 @@ class FFmpegSubtitlesConvertorPP(FFmpegPostProcessor):
 
                 with io.open(srt_file, 'wt', encoding='utf-8') as f:
                     f.write(srt_data)
+                old_file = srt_file
 
-                ext = 'srt'
                 subs[lang] = {
                     'ext': 'srt',
                     'data': srt_data
@@ -510,15 +559,15 @@ class FFmpegSubtitlesConvertorPP(FFmpegPostProcessor):
 
                 if new_ext == 'srt':
                     continue
+                else:
+                    sub_filenames.append(srt_file)
 
-            self.run_ffmpeg(
-                subtitles_filename(filename, lang, ext),
-                new_file, ['-f', new_format])
+            self.run_ffmpeg(old_file, new_file, ['-f', new_format])
 
             with io.open(new_file, 'rt', encoding='utf-8') as f:
                 subs[lang] = {
-                    'ext': ext,
+                    'ext': new_ext,
                     'data': f.read(),
                 }
 
-        return [], info
+        return sub_filenames, info

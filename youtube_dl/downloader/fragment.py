@@ -19,14 +19,27 @@ class HttpQuietDownloader(HttpFD):
 class FragmentFD(FileDownloader):
     """
     A base file downloader class for fragmented media (e.g. f4m/m3u8 manifests).
+
+    Available options:
+
+    fragment_retries:   Number of times to retry a fragment for HTTP error (DASH only)
     """
+
+    def report_retry_fragment(self, fragment_name, count, retries):
+        self.to_screen(
+            '[download] Got server HTTP error. Retrying fragment %s (attempt %d of %s)...'
+            % (fragment_name, count, self.format_retries(retries)))
 
     def _prepare_and_start_frag_download(self, ctx):
         self._prepare_frag_download(ctx)
         self._start_frag_download(ctx)
 
     def _prepare_frag_download(self, ctx):
-        self.to_screen('[%s] Total fragments: %d' % (self.FD_NAME, ctx['total_frags']))
+        if 'live' not in ctx:
+            ctx['live'] = False
+        self.to_screen(
+            '[%s] Total fragments: %s'
+            % (self.FD_NAME, ctx['total_frags'] if not ctx['live'] else 'unknown (live)'))
         self.report_destination(ctx['filename'])
         dl = HttpQuietDownloader(
             self.ydl,
@@ -34,7 +47,7 @@ class FragmentFD(FileDownloader):
                 'continuedl': True,
                 'quiet': True,
                 'noprogress': True,
-                'ratelimit': self.params.get('ratelimit', None),
+                'ratelimit': self.params.get('ratelimit'),
                 'retries': self.params.get('retries', 0),
                 'test': self.params.get('test', False),
             }
@@ -74,14 +87,14 @@ class FragmentFD(FileDownloader):
             if s['status'] not in ('downloading', 'finished'):
                 return
 
-            frag_total_bytes = s.get('total_bytes') or 0
-
-            estimated_size = (
-                (ctx['complete_frags_downloaded_bytes'] + frag_total_bytes) /
-                (state['frag_index'] + 1) * total_frags)
             time_now = time.time()
-            state['total_bytes_estimate'] = estimated_size
             state['elapsed'] = time_now - start
+            frag_total_bytes = s.get('total_bytes') or 0
+            if not ctx['live']:
+                estimated_size = (
+                    (ctx['complete_frags_downloaded_bytes'] + frag_total_bytes) /
+                    (state['frag_index'] + 1) * total_frags)
+                state['total_bytes_estimate'] = estimated_size
 
             if s['status'] == 'finished':
                 state['frag_index'] += 1
@@ -91,10 +104,12 @@ class FragmentFD(FileDownloader):
             else:
                 frag_downloaded_bytes = s['downloaded_bytes']
                 state['downloaded_bytes'] += frag_downloaded_bytes - ctx['prev_frag_downloaded_bytes']
-                state['eta'] = self.calc_eta(
-                    start, time_now, estimated_size,
-                    state['downloaded_bytes'])
-                state['speed'] = s.get('speed')
+                if not ctx['live']:
+                    state['eta'] = self.calc_eta(
+                        start, time_now, estimated_size,
+                        state['downloaded_bytes'])
+                state['speed'] = s.get('speed') or ctx.get('speed')
+                ctx['speed'] = state['speed']
                 ctx['prev_frag_downloaded_bytes'] = frag_downloaded_bytes
             self._hook_progress(state)
 

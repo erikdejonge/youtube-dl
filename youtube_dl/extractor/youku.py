@@ -8,7 +8,7 @@ import time
 
 from .common import InfoExtractor
 from ..compat import (
-    compat_urllib_parse,
+    compat_urllib_parse_urlencode,
     compat_ord,
 )
 from ..utils import (
@@ -64,6 +64,14 @@ class YoukuIE(InfoExtractor):
         'params': {
             'videopassword': '100600',
         },
+    }, {
+        # /play/get.json contains streams with "channel_type":"tail"
+        'url': 'http://v.youku.com/v_show/id_XOTUxMzg4NDMy.html',
+        'info_dict': {
+            'id': 'XOTUxMzg4NDMy',
+            'title': '我的世界☆明月庄主☆车震猎杀☆杀人艺术Minecraft',
+        },
+        'playlist_count': 6,
     }]
 
     def construct_video_urls(self, data):
@@ -92,6 +100,8 @@ class YoukuIE(InfoExtractor):
 
         fileid_dict = {}
         for stream in data['stream']:
+            if stream.get('channel_type') == 'tail':
+                continue
             format = stream.get('stream_type')
             fileid = stream['stream_fileid']
             fileid_dict[format] = fileid
@@ -117,6 +127,8 @@ class YoukuIE(InfoExtractor):
         # generate video_urls
         video_urls_dict = {}
         for stream in data['stream']:
+            if stream.get('channel_type') == 'tail':
+                continue
             format = stream.get('stream_type')
             video_urls = []
             for dt in stream['segs']:
@@ -138,7 +150,7 @@ class YoukuIE(InfoExtractor):
                     '_00' + \
                     '/st/' + self.parse_ext_l(format) + \
                     '/fileid/' + get_fileid(format, n) + '?' + \
-                    compat_urllib_parse.urlencode(param)
+                    compat_urllib_parse_urlencode(param)
                 video_urls.append(video_url)
             video_urls_dict[format] = video_urls
 
@@ -214,10 +226,10 @@ class YoukuIE(InfoExtractor):
 
             return raw_data['data']
 
-        video_password = self._downloader.params.get('videopassword', None)
+        video_password = self._downloader.params.get('videopassword')
 
         # request basic data
-        basic_data_url = "http://play.youku.com/play/get.json?vid=%s&ct=12" % video_id
+        basic_data_url = 'http://play.youku.com/play/get.json?vid=%s&ct=12' % video_id
         if video_password:
             basic_data_url += '&pwd=%s' % video_password
 
@@ -229,6 +241,9 @@ class YoukuIE(InfoExtractor):
             if error_note is not None and '因版权原因无法观看此视频' in error_note:
                 raise ExtractorError(
                     'Youku said: Sorry, this video is available in China only', expected=True)
+            elif error_note and '该视频被设为私密' in error_note:
+                raise ExtractorError(
+                    'Youku said: Sorry, this video is private', expected=True)
             else:
                 msg = 'Youku server reported error %i' % error.get('code')
                 if error_note is not None:
@@ -250,6 +265,8 @@ class YoukuIE(InfoExtractor):
             # which one has all
         } for i in range(max(len(v.get('segs')) for v in data['stream']))]
         for stream in data['stream']:
+            if stream.get('channel_type') == 'tail':
+                continue
             fm = stream.get('stream_type')
             video_urls = video_urls_dict[fm]
             for video_url, seg, entry in zip(video_urls, stream['segs'], entries):

@@ -20,6 +20,7 @@ class VGTVIE(XstreamIE):
         'aftenbladet.no/tv': 'satv',
         'fvn.no/fvntv': 'fvntv',
         'aftenposten.no/webtv': 'aptv',
+        'ap.vgtv.no/webtv': 'aptv',
     }
 
     _APP_NAME_TO_VENDOR = {
@@ -35,7 +36,7 @@ class VGTVIE(XstreamIE):
                     (?P<host>
                         %s
                     )
-                    /
+                    /?
                     (?:
                         \#!/(?:video|live)/|
                         embed?.*id=
@@ -86,10 +87,9 @@ class VGTVIE(XstreamIE):
         {
             # streamType: wasLive
             'url': 'http://www.vgtv.no/#!/live/113063/direkte-v75-fra-solvalla',
-            'md5': '458f4841239dab414343b50e5af8869c',
             'info_dict': {
                 'id': '113063',
-                'ext': 'flv',
+                'ext': 'mp4',
                 'title': 'V75 fra Solvalla 30.05.15',
                 'description': 'md5:b3743425765355855f88e096acc93231',
                 'thumbnail': 're:^https?://.*\.jpg',
@@ -98,23 +98,35 @@ class VGTVIE(XstreamIE):
                 'upload_date': '20150530',
                 'view_count': int,
             },
+            'params': {
+                # m3u8 download
+                'skip_download': True,
+            },
         },
         {
             'url': 'http://www.aftenposten.no/webtv/#!/video/21039/trailer-sweatshop-i-can-t-take-any-more',
             'md5': 'fd828cd29774a729bf4d4425fe192972',
             'info_dict': {
                 'id': '21039',
-                'ext': 'mov',
+                'ext': 'mp4',
                 'title': 'TRAILER: «SWEATSHOP» - I can´t take any more',
                 'description': 'md5:21891f2b0dd7ec2f78d84a50e54f8238',
                 'duration': 66,
                 'timestamp': 1417002452,
                 'upload_date': '20141126',
                 'view_count': int,
-            }
+            },
+            'params': {
+                # m3u8 download
+                'skip_download': True,
+            },
         },
         {
             'url': 'http://www.bt.no/tv/#!/video/100250/norling-dette-er-forskjellen-paa-1-divisjon-og-eliteserien',
+            'only_matching': True,
+        },
+        {
+            'url': 'http://ap.vgtv.no/webtv#!/video/111084/de-nye-bysyklene-lettere-bedre-gir-stoerre-hjul-og-feste-til-mobil',
             'only_matching': True,
         },
     ]
@@ -141,8 +153,6 @@ class VGTVIE(XstreamIE):
         if len(video_id) == 5:
             if appname == 'bttv':
                 info = self._extract_video_info('btno', video_id)
-            elif appname == 'aptv':
-                info = self._extract_video_info('ap', video_id)
 
         streams = data['streamUrls']
         stream_type = data.get('streamType')
@@ -204,7 +214,7 @@ class VGTVIE(XstreamIE):
 class BTArticleIE(InfoExtractor):
     IE_NAME = 'bt:article'
     IE_DESC = 'Bergens Tidende Articles'
-    _VALID_URL = 'http://(?:www\.)?bt\.no/(?:[^/]+/)+(?P<id>[^/]+)-\d+\.html'
+    _VALID_URL = r'https?://(?:www\.)?bt\.no/(?:[^/]+/)+(?P<id>[^/]+)-\d+\.html'
     _TEST = {
         'url': 'http://www.bt.no/nyheter/lokalt/Kjemper-for-internatet-1788214.html',
         'md5': '2acbe8ad129b3469d5ae51b1158878df',
@@ -231,7 +241,7 @@ class BTArticleIE(InfoExtractor):
 class BTVestlendingenIE(InfoExtractor):
     IE_NAME = 'bt:vestlendingen'
     IE_DESC = 'Bergens Tidende - Vestlendingen'
-    _VALID_URL = 'http://(?:www\.)?bt\.no/spesial/vestlendingen/#!/(?P<id>\d+)'
+    _VALID_URL = r'https?://(?:www\.)?bt\.no/spesial/vestlendingen/#!/(?P<id>\d+)'
     _TESTS = [{
         'url': 'http://www.bt.no/spesial/vestlendingen/#!/86588',
         'md5': 'd7d17e3337dc80de6d3a540aefbe441b',
