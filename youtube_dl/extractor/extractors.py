@@ -400,7 +400,6 @@ from .macgamestore import MacGameStoreIE
 from .mailru import MailRuIE
 from .makerschannel import MakersChannelIE
 from .makertv import MakerTVIE
-from .malemotion import MalemotionIE
 from .matchtv import MatchTVIE
 from .mdr import MDRIE
 from .metacafe import MetacafeIE
@@ -439,7 +438,7 @@ from .mtv import (
 )
 from .muenchentv import MuenchenTVIE
 from .musicplayon import MusicPlayOnIE
-from .mwave import MwaveIE
+from .mwave import MwaveIE, MwaveMeetGreetIE
 from .myspace import MySpaceIE, MySpaceAlbumIE
 from .myspass import MySpassIE
 from .myvi import MyviIE
@@ -658,7 +657,6 @@ from .screenwavemedia import ScreenwaveMediaIE, TeamFourIE
 from .senateisvp import SenateISVPIE
 from .servingsys import ServingSysIE
 from .sexu import SexuIE
-from .sexykarma import SexyKarmaIE
 from .shahid import ShahidIE
 from .shared import SharedIE
 from .sharesix import ShareSixIE
@@ -674,10 +672,6 @@ from .smotri import (
     SmotriCommunityIE,
     SmotriUserIE,
     SmotriBroadcastIE,
-)
-from .snagfilms import (
-    SnagFilmsIE,
-    SnagFilmsEmbedIE,
 )
 from .snotr import SnotrIE
 from .sohu import SohuIE
@@ -730,7 +724,10 @@ from .svt import (
 from .swrmediathek import SWRMediathekIE
 from .syfy import SyfyIE
 from .sztvhu import SztvHuIE
-from .tagesschau import TagesschauIE
+from .tagesschau import (
+    TagesschauPlayerIE,
+    TagesschauIE,
+)
 from .tapely import TapelyIE
 from .tass import TassIE
 from .tdslifeway import TDSLifewayIE
@@ -852,7 +849,10 @@ from .veehd import VeeHDIE
 from .veoh import VeohIE
 from .vessel import VesselIE
 from .vesti import VestiIE
-from .vevo import VevoIE
+from .vevo import (
+    VevoIE,
+    VevoPlaylistIE,
+)
 from .vgtv import (
     BTArticleIE,
     BTVestlendingenIE,
@@ -881,6 +881,10 @@ from .vidme import (
 )
 from .vidzi import VidziIE
 from .vier import VierIE, VierVideosIE
+from .viewlift import (
+    ViewLiftIE,
+    ViewLiftEmbedIE,
+)
 from .viewster import ViewsterIE
 from .viidea import ViideaIE
 from .vimeo import (
@@ -919,6 +923,7 @@ from .vulture import VultureIE
 from .walla import WallaIE
 from .washingtonpost import WashingtonPostIE
 from .wat import WatIE
+from .watchindianporn import WatchIndianPornIE
 from .wdr import (
     WDRIE,
     WDRMobileIE,
@@ -941,6 +946,12 @@ from .xfileshare import XFileShareIE
 from .xhamster import (
     XHamsterIE,
     XHamsterEmbedIE,
+)
+from .xiami import (
+    XiamiSongIE,
+    XiamiAlbumIE,
+    XiamiArtistIE,
+    XiamiCollectionIE
 )
 from .xminus import XMinusIE
 from .xnxx import XNXXIE
