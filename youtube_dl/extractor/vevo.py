@@ -189,8 +189,8 @@ class VevoIE(VevoBaseIE):
             errnote='Unable to retrieve oauth token')
 
         if 'THIS PAGE IS CURRENTLY UNAVAILABLE IN YOUR REGION' in webpage:
-            raise ExtractorError(
-                '%s said: This page is currently unavailable in your region.' % self.IE_NAME, expected=True)
+            self.raise_geo_restricted(
+                '%s said: This page is currently unavailable in your region' % self.IE_NAME)
 
         auth_info = self._parse_json(webpage, video_id)
         self._api_url_template = self.http_scheme() + '//apiv2.vevo.com/%s?token=' + auth_info['access_token']
@@ -203,7 +203,8 @@ class VevoIE(VevoBaseIE):
 
         json_url = 'http://api.vevo.com/VideoService/AuthenticateVideo?isrc=%s' % video_id
         response = self._download_json(
-            json_url, video_id, 'Downloading video info', 'Unable to download info')
+            json_url, video_id, 'Downloading video info',
+            'Unable to download info', fatal=False) or {}
         video_info = response.get('video') or {}
         artist = None
         featured_artist = None
@@ -212,19 +213,17 @@ class VevoIE(VevoBaseIE):
         formats = []
 
         if not video_info:
-            if response.get('statusCode') != 909:
+            try:
+                self._initialize_api(video_id)
+            except ExtractorError:
                 ytid = response.get('errorInfo', {}).get('ytid')
                 if ytid:
                     self.report_warning(
                         'Video is geoblocked, trying with the YouTube video %s' % ytid)
                     return self.url_result(ytid, 'Youtube', ytid)
 
-                if 'statusMessage' in response:
-                    raise ExtractorError('%s said: %s' % (
-                        self.IE_NAME, response['statusMessage']), expected=True)
-                raise ExtractorError('Unable to extract videos')
+                raise
 
-            self._initialize_api(video_id)
             video_info = self._call_api(
                 'video/%s' % video_id, video_id, 'Downloading api video info',
                 'Failed to download video info')

@@ -44,10 +44,10 @@ class ComedyCentralShowsIE(MTVServicesInfoExtractor):
     #                     or: http://www.colbertnation.com/the-colbert-report-collections/422008/festival-of-lights/79524
     _VALID_URL = r'''(?x)^(:(?P<shortname>tds|thedailyshow)
                       |https?://(:www\.)?
-                          (?P<showname>thedailyshow|thecolbertreport)\.(?:cc\.)?com/
+                          (?P<showname>thedailyshow|thecolbertreport|tosh)\.(?:cc\.)?com/
                          ((?:full-)?episodes/(?:[0-9a-z]{6}/)?(?P<episode>.*)|
                           (?P<clip>
-                              (?:(?:guests/[^/]+|videos|video-playlists|special-editions|news-team/[^/]+)/[^/]+/(?P<videotitle>[^/?#]+))
+                              (?:(?:guests/[^/]+|videos|video-(?:clips|playlists)|special-editions|news-team/[^/]+)/[^/]+/(?P<videotitle>[^/?#]+))
                               |(the-colbert-report-(videos|collections)/(?P<clipID>[0-9]+)/[^/]*/(?P<cntitle>.*?))
                               |(watch/(?P<date>[^/]*)/(?P<tdstitle>.*))
                           )|
@@ -128,6 +128,9 @@ class ComedyCentralShowsIE(MTVServicesInfoExtractor):
         'only_matching': True,
     }, {
         'url': 'http://thedailyshow.cc.com/news-team/michael-che/7wnfel/we-need-to-talk-about-israel',
+        'only_matching': True,
+    }, {
+        'url': 'http://tosh.cc.com/video-clips/68g93d/twitter-users-share-summer-plans',
         'only_matching': True,
     }]
 
@@ -270,3 +273,36 @@ class ComedyCentralShowsIE(MTVServicesInfoExtractor):
             'title': show_name + ' ' + title,
             'description': description,
         }
+
+
+class ComedyCentralTVIE(MTVServicesInfoExtractor):
+    _VALID_URL = r'https?://(?:www\.)?comedycentral\.tv/(?:staffeln|shows)/(?P<id>[^/?#&]+)'
+    _TESTS = [{
+        'url': 'http://www.comedycentral.tv/staffeln/7436-the-mindy-project-staffel-4',
+        'info_dict': {
+            'id': 'local_playlist-f99b626bdfe13568579a',
+            'ext': 'flv',
+            'title': 'Episode_the-mindy-project_shows_season-4_episode-3_full-episode_part1',
+        },
+        'params': {
+            # rtmp download
+            'skip_download': True,
+        },
+    }, {
+        'url': 'http://www.comedycentral.tv/shows/1074-workaholics',
+        'only_matching': True,
+    }, {
+        'url': 'http://www.comedycentral.tv/shows/1727-the-mindy-project/bonus',
+        'only_matching': True,
+    }]
+
+    def _real_extract(self, url):
+        video_id = self._match_id(url)
+
+        webpage = self._download_webpage(url, video_id)
+
+        mrss_url = self._search_regex(
+            r'data-mrss=(["\'])(?P<url>(?:(?!\1).)+)\1',
+            webpage, 'mrss url', group='url')
+
+        return self._get_videos_info_from_url(mrss_url, video_id)

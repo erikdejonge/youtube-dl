@@ -6,6 +6,7 @@ from .common import InfoExtractor
 from ..compat import (
     compat_urllib_parse_urlencode,
     compat_str,
+    compat_xpath,
 )
 from ..utils import (
     ExtractorError,
@@ -14,6 +15,7 @@ from ..utils import (
     float_or_none,
     HEADRequest,
     sanitized_Request,
+    strip_or_none,
     unescapeHTML,
     url_basename,
     RegexNotFoundError,
@@ -84,9 +86,10 @@ class MTVServicesInfoExtractor(InfoExtractor):
                 rtmp_video_url = rendition.find('./src').text
                 if rtmp_video_url.endswith('siteunavail.png'):
                     continue
+                new_url = self._transform_rtmp_url(rtmp_video_url)
                 formats.append({
-                    'ext': ext,
-                    'url': self._transform_rtmp_url(rtmp_video_url),
+                    'ext': 'flv' if new_url.startswith('rtmp') else ext,
+                    'url': new_url,
                     'format_id': rendition.get('bitrate'),
                     'width': int(rendition.get('width')),
                     'height': int(rendition.get('height')),
@@ -131,7 +134,7 @@ class MTVServicesInfoExtractor(InfoExtractor):
             message += item.text
             raise ExtractorError(message, expected=True)
 
-        description = xpath_text(itemdoc, 'description')
+        description = strip_or_none(xpath_text(itemdoc, 'description'))
 
         title_el = None
         if title_el is None:
@@ -139,9 +142,9 @@ class MTVServicesInfoExtractor(InfoExtractor):
                 itemdoc, './/{http://search.yahoo.com/mrss/}category',
                 'scheme', 'urn:mtvn:video_title')
         if title_el is None:
-            title_el = itemdoc.find('.//{http://search.yahoo.com/mrss/}title')
+            title_el = itemdoc.find(compat_xpath('.//{http://search.yahoo.com/mrss/}title'))
         if title_el is None:
-            title_el = itemdoc.find('.//title') or itemdoc.find('./title')
+            title_el = itemdoc.find(compat_xpath('.//title'))
             if title_el.text is None:
                 title_el = None
 
