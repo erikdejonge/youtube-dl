@@ -5,11 +5,13 @@ import re
 
 from .common import InfoExtractor
 from ..utils import (
+    dict_get,
     ExtractorError,
     float_or_none,
     int_or_none,
     parse_duration,
     parse_iso8601,
+    try_get,
     unescapeHTML,
 )
 from ..compat import (
@@ -336,8 +338,8 @@ class BBCCoUkIE(InfoExtractor):
                         formats.extend(self._extract_f4m_formats(
                             href, programme_id, f4m_id=format_id, fatal=False))
                     else:
-                        if bitrate:
-                            format_id += '-%d' %  bitrate
+                        if not service and not supplier and bitrate:
+                            format_id += '-%d' % bitrate
                         fmt = {
                             'format_id': format_id,
                             'filesize': file_size,
@@ -644,6 +646,23 @@ class BBCIE(BBCCoUkIE):
             'skip_download': True,
         }
     }, {
+        # single video embedded with Morph
+        'url': 'http://www.bbc.co.uk/sport/live/olympics/36895975',
+        'info_dict': {
+            'id': 'p041vhd0',
+            'ext': 'mp4',
+            'title': "Nigeria v Japan - Men's First Round",
+            'description': 'Live coverage of the first round from Group B at the Amazonia Arena.',
+            'duration': 7980,
+            'uploader': 'BBC Sport',
+            'uploader_id': 'bbc_sport',
+        },
+        'params': {
+            # m3u8 download
+            'skip_download': True,
+        },
+        'skip': 'Georestricted to UK',
+    }, {
         # single video with playlist.sxml URL in playlist param
         'url': 'http://www.bbc.com/sport/0/football/33653409',
         'info_dict': {
@@ -740,7 +759,7 @@ class BBCIE(BBCCoUkIE):
 
         webpage = self._download_webpage(url, playlist_id)
 
-        json_ld_info = self._search_json_ld(webpage, playlist_id, default=None)
+        json_ld_info = self._search_json_ld(webpage, playlist_id, default={})
         timestamp = json_ld_info.get('timestamp')
 
         playlist_title = json_ld_info.get('title')
@@ -864,6 +883,50 @@ class BBCIE(BBCCoUkIE):
                 'subtitles': subtitles,
             }
 
+        # Morph based embed (e.g. http://www.bbc.co.uk/sport/live/olympics/36895975)
+        # There are several setPayload calls may be present but the video
+        # seems to be always related to the first one
+        morph_payload = self._parse_json(
+            self._search_regex(
+                r'Morph\.setPayload\([^,]+,\s*({.+?})\);',
+                webpage, 'morph payload', default='{}'),
+            playlist_id, fatal=False)
+        if morph_payload:
+            components = try_get(morph_payload, lambda x: x['body']['components'], list) or []
+            for component in components:
+                if not isinstance(component, dict):
+                    continue
+                lead_media = try_get(component, lambda x: x['props']['leadMedia'], dict)
+                if not lead_media:
+                    continue
+                identifiers = lead_media.get('identifiers')
+                if not identifiers or not isinstance(identifiers, dict):
+                    continue
+                programme_id = identifiers.get('vpid') or identifiers.get('playablePid')
+                if not programme_id:
+                    continue
+                title = lead_media.get('title') or self._og_search_title(webpage)
+                formats, subtitles = self._download_media_selector(programme_id)
+                self._sort_formats(formats)
+                description = lead_media.get('summary')
+                uploader = lead_media.get('masterBrand')
+                uploader_id = lead_media.get('mid')
+                duration = None
+                duration_d = lead_media.get('duration')
+                if isinstance(duration_d, dict):
+                    duration = parse_duration(dict_get(
+                        duration_d, ('rawDuration', 'formattedDuration', 'spokenDuration')))
+                return {
+                    'id': programme_id,
+                    'title': title,
+                    'description': description,
+                    'duration': duration,
+                    'uploader': uploader,
+                    'uploader_id': uploader_id,
+                    'formats': formats,
+                    'subtitles': subtitles,
+                }
+
         def extract_all(pattern):
             return list(filter(None, map(
                 lambda s: self._parse_json(s, playlist_id, fatal=False),
@@ -881,7 +944,7 @@ class BBCIE(BBCCoUkIE):
             r'setPlaylist\("(%s)"\)' % EMBED_URL, webpage))
         if entries:
             return self.playlist_result(
-                [self.url_result(entry, 'BBCCoUk') for entry in entries],
+                [self.url_result(entry_, 'BBCCoUk') for entry_ in entries],
                 playlist_id, playlist_title, playlist_description)
 
         # Multiple video article (e.g. http://www.bbc.com/news/world-europe-32668511)

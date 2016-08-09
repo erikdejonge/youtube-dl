@@ -221,6 +221,7 @@ from .dvtv import DVTVIE
 from .dumpert import DumpertIE
 from .defense import DefenseGouvFrIE
 from .discovery import DiscoveryIE
+from .discoverygo import DiscoveryGoIE
 from .dispeak import DigitallySpeakingIE
 from .dropbox import DropboxIE
 from .dw import (
@@ -695,6 +696,7 @@ from .rockstargames import RockstarGamesIE
 from .roosterteeth import RoosterTeethIE
 from .rottentomatoes import RottenTomatoesIE
 from .roxwel import RoxwelIE
+from .rozhlas import RozhlasIE
 from .rtbf import RTBFIE
 from .rte import RteIE, RteRadioIE
 from .rtlnl import RtlNlIE
@@ -754,6 +756,7 @@ from .smotri import (
 )
 from .snotr import SnotrIE
 from .sohu import SohuIE
+from .sonyliv import SonyLIVIE
 from .soundcloud import (
     SoundcloudIE,
     SoundcloudSetIE,
