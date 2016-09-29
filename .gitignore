@@ -30,6 +30,7 @@ updates_key.pem
 *.m4a
 *.m4v
 *.mp3
+*.3gp
 *.part
 *.swp
 test/testdata
