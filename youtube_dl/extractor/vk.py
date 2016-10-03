@@ -20,7 +20,7 @@ from ..utils import (
     remove_start,
     str_to_int,
     unescapeHTML,
-    unified_strdate,
+    unified_timestamp,
     urlencode_postdata,
 )
 from .dailymotion import DailymotionIE
@@ -106,6 +106,7 @@ class VKIE(VKBaseIE):
                 'title': 'ProtivoGunz - Хуёвая песня',
                 'uploader': 're:(?:Noize MC|Alexander Ilyashenko).*',
                 'duration': 195,
+                'timestamp': 1329060660,
                 'upload_date': '20120212',
                 'view_count': int,
             },
@@ -119,6 +120,7 @@ class VKIE(VKBaseIE):
                 'uploader': 'Tom Cruise',
                 'title': 'No name',
                 'duration': 9,
+                'timestamp': 1374374880,
                 'upload_date': '20130721',
                 'view_count': int,
             }
@@ -195,6 +197,7 @@ class VKIE(VKBaseIE):
                 'upload_date': '20150709',
                 'view_count': int,
             },
+            'skip': 'Removed',
         },
         {
             # youtube embed
@@ -226,7 +229,7 @@ class VKIE(VKBaseIE):
             },
             'params': {
                 'skip_download': True,
-            }
+            },
         },
         {
             # video key is extra_data not url\d+
@@ -237,9 +240,29 @@ class VKIE(VKBaseIE):
                 'ext': 'mp4',
                 'title': 'S-Dance, репетиции к The way show',
                 'uploader': 'THE WAY SHOW | 17 апреля',
+                'timestamp': 1454870100,
                 'upload_date': '20160207',
                 'view_count': int,
             },
+        },
+        {
+            # finished live stream, live_mp4
+            'url': 'https://vk.com/videos-387766?z=video-387766_456242764%2Fpl_-387766_-2',
+            'md5': '90d22d051fccbbe9becfccc615be6791',
+            'info_dict': {
+                'id': '456242764',
+                'ext': 'mp4',
+                'title': 'ИгроМир 2016 — день 1',
+                'uploader': 'Игромания',
+                'duration': 5239,
+                'view_count': int,
+            },
+        },
+        {
+            # live stream, hls and rtmp links,most likely already finished live
+            # stream by the time you are reading this comment
+            'url': 'https://vk.com/video-140332_456239111',
+            'only_matching': True,
         },
         {
             # removed video, just testing that we match the pattern
@@ -349,42 +372,51 @@ class VKIE(VKBaseIE):
         data_json = self._search_regex(r'var\s+vars\s*=\s*({.+?});', info_page, 'vars')
         data = json.loads(data_json)
 
-        # Extract upload date
-        upload_date = None
-        mobj = re.search(r'id="mv_date(?:_views)?_wrap"[^>]*>([a-zA-Z]+ [0-9]+), ([0-9]+) at', info_page)
-        if mobj is not None:
-            mobj.group(1) + ' ' + mobj.group(2)
-            upload_date = unified_strdate(mobj.group(1) + ' ' + mobj.group(2))
+        title = unescapeHTML(data['md_title'])
 
-        view_count = None
-        views = self._html_search_regex(
-            r'"mv_views_count_number"[^>]*>(.+?\bviews?)<',
-            info_page, 'view count', default=None)
-        if views:
-            view_count = str_to_int(self._search_regex(
-                r'([\d,.]+)', views, 'view count', fatal=False))
+        if data.get('live') == 2:
+            title = self._live_title(title)
+
+        timestamp = unified_timestamp(self._html_search_regex(
+            r'class=["\']mv_info_date[^>]+>([^<]+)(?:<|from)', info_page,
+            'upload date', fatal=False))
+
+        view_count = str_to_int(self._search_regex(
+            r'class=["\']mv_views_count[^>]+>\s*([\d,.]+)',
+            info_page, 'view count', fatal=False))
 
         formats = []
-        for k, v in data.items():
-            if not k.startswith('url') and not k.startswith('cache') and k != 'extra_data' or not v:
+        for format_id, format_url in data.items():
+            if not isinstance(format_url, compat_str) or not format_url.startswith(('http', '//', 'rtmp')):
                 continue
-            height = int_or_none(self._search_regex(
-                r'^(?:url|cache)(\d+)', k, 'height', default=None))
-            formats.append({
-                'format_id': k,
-                'url': v,
-                'height': height,
-            })
+            if format_id.startswith(('url', 'cache')) or format_id in ('extra_data', 'live_mp4'):
+                height = int_or_none(self._search_regex(
+                    r'^(?:url|cache)(\d+)', format_id, 'height', default=None))
+                formats.append({
+                    'format_id': format_id,
+                    'url': format_url,
+                    'height': height,
+                })
+            elif format_id == 'hls':
+                formats.extend(self._extract_m3u8_formats(
+                    format_url, video_id, 'mp4', m3u8_id=format_id,
+                    fatal=False, live=True))
+            elif format_id == 'rtmp':
+                formats.append({
+                    'format_id': format_id,
+                    'url': format_url,
+                    'ext': 'flv',
+                })
         self._sort_formats(formats)
 
         return {
-            'id': compat_str(data['vid']),
+            'id': compat_str(data.get('vid') or video_id),
             'formats': formats,
-            'title': unescapeHTML(data['md_title']),
+            'title': title,
             'thumbnail': data.get('jpg'),
             'uploader': data.get('md_author'),
             'duration': data.get('duration'),
-            'upload_date': upload_date,
+            'timestamp': timestamp,
             'view_count': view_count,
         }
 

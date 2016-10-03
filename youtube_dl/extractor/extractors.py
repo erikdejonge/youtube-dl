@@ -31,7 +31,6 @@ from .aenetworks import (
     HistoryTopicIE,
 )
 from .afreecatv import AfreecaTVIE
-from .aftonbladet import AftonbladetIE
 from .airmozilla import AirMozillaIE
 from .aljazeera import AlJazeeraIE
 from .alphaporno import AlphaPornoIE
@@ -117,7 +116,10 @@ from .brightcove import (
     BrightcoveNewIE,
 )
 from .buzzfeed import BuzzFeedIE
-from .byutv import BYUtvIE
+from .byutv import (
+    BYUtvIE,
+    BYUtvEventIE,
+)
 from .c56 import C56IE
 from .camdemy import (
     CamdemyIE,

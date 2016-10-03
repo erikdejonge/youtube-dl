@@ -266,8 +266,6 @@ def _real_main(argv=None):
         postprocessors.append({
             'key': 'FFmpegEmbedSubtitle',
         })
-    if opts.xattrs:
-        postprocessors.append({'key': 'XAttrMetadata'})
     if opts.embedthumbnail:
         already_have_thumbnail = opts.writethumbnail or opts.write_all_thumbnails
         postprocessors.append({
@@ -276,6 +274,10 @@ def _real_main(argv=None):
         })
         if not already_have_thumbnail:
             opts.writethumbnail = True
+    # XAttrMetadataPP should be run after post-processors that may change file
+    # contents
+    if opts.xattrs:
+        postprocessors.append({'key': 'XAttrMetadata'})
     # Please keep ExecAfterDownload towards the bottom as it allows the user to modify the final file in any way.
     # So if the user is able to remove the file before your postprocessor runs it might cause a few problems.
     if opts.exec_cmd:
@@ -283,12 +285,6 @@ def _real_main(argv=None):
             'key': 'ExecAfterDownload',
             'exec_cmd': opts.exec_cmd,
         })
-    if opts.xattr_set_filesize:
-        try:
-            import xattr
-            xattr  # Confuse flake8
-        except ImportError:
-            parser.error('setting filesize xattr requested but python-xattr is not available')
     external_downloader_args = None
     if opts.external_downloader_args:
         external_downloader_args = compat_shlex_split(opts.external_downloader_args)
