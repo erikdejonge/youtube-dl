@@ -1,4 +1,4 @@
-# encoding: utf-8
+# coding: utf-8
 from __future__ import unicode_literals
 
 import re
@@ -150,6 +150,7 @@ class CrunchyrollIE(CrunchyrollBaseIE):
             # rtmp
             'skip_download': True,
         },
+        'skip': 'Video gone',
     }, {
         'url': 'http://www.crunchyroll.com/rezero-starting-life-in-another-world-/episode-5-the-morning-of-our-promise-is-still-distant-702409',
         'info_dict': {

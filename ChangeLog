@@ -1,4 +1,114 @@
-vesion 2016.09.27
+version <unreleased>
+
+Extractors
+* [openload] Fix extraction (#10408, #10971)
+
+
+version 2016.10.19
+
+Core
++ [utils] Expose PACKED_CODES_RE
++ [extractor/common] Extract non smil wowza mpd manifests
++ [extractor/common] Detect f4m audio-only formats
+
+Extractors
+* [vidzi] Fix extraction (#10908, #10952)
+* [urplay] Fix subtitles extraction
++ [urplay] Add support for urskola.se (#10915)
++ [orf] Add subtitles support (#10939)
+* [youtube] Fix --no-playlist behavior for youtu.be/id URLs (#10896)
+* [nrk] Relax URL regular expression (#10928)
++ [nytimes] Add support for podcasts (#10926)
+* [pluralsight] Relax URL regular expression (#10941)
+
+
+version 2016.10.16
+
+Core
+* [postprocessor/ffmpeg] Return correct filepath and ext in updated information
+  in FFmpegExtractAudioPP (#10879)
+
+Extractors
++ [ruutu] Add support for supla.fi (#10849)
++ [theoperaplatform] Add support for theoperaplatform.eu (#10914)
+* [lynda] Fix height for prioritized streams
++ [lynda] Add fallback extraction scenario
+* [lynda] Switch to https (#10916)
++ [huajiao] New extractor (#10917)
+* [cmt] Fix mgid extraction (#10813)
++ [safari:course] Add support for techbus.safaribooksonline.com
+* [orf:tvthek] Fix extraction and modernize (#10898)
+* [chirbit] Fix extraction of user profile pages
+* [carambatv] Fix extraction
+* [canalplus] Fix extraction for some videos
+* [cbsinteractive] Fix extraction for cnet.com
+* [parliamentliveuk] Lower case URLs are now recognized (#10912)
+
+
+version 2016.10.12
+
+Core
++ Support HTML media elements without child nodes
+* [Makefile] Support for GNU make < 4 is fixed; BSD make dropped (#9387)
+
+Extractors
+* [dailymotion] Fix extraction (#10901)
+* [vimeo:review] Fix extraction (#10900)
+* [nhl] Correctly handle invalid formats (#10713)
+* [footyroom] Fix extraction (#10810)
+* [abc.net.au:iview] Fix for standalone (non series) videos (#10895)
++ [hbo] Add support for episode pages (#10892)
+* [allocine] Fix extraction (#10860)
++ [nextmedia] Recognize action news on AppleDaily
+* [lego] Improve info extraction and bypass geo restriction (#10872)
+
+
+version 2016.10.07
+
+Extractors
++ [iprima] Detect geo restriction
+* [facebook] Fix video extraction (#10846)
++ [commonprotocols] Support direct MMS links (#10838)
++ [generic] Add support for multiple vimeo embeds (#10862)
++ [nzz] Add support for nzz.ch (#4407)
++ [npo] Detect geo restriction
++ [npo] Add support for 2doc.nl (#10842)
++ [lego] Add support for lego.com (#10369)
++ [tonline] Add support for t-online.de (#10376)
+* [techtalks] Relax URL regular expression (#10840)
+* [youtube:live] Extend URL regular expression (#10839)
++ [theweatherchannel] Add support for weather.com (#7188)
++ [thisoldhouse] Add support for thisoldhouse.com (#10837)
++ [nhl] Add support for wch2016.com (#10833)
+* [pornoxo] Use JWPlatform to improve metadata extraction
+
+
+version 2016.10.02
+
+Core
+* Fix possibly lost extended attributes during post-processing
++ Support pyxattr as well as python-xattr for --xattrs and
+  --xattr-set-filesize (#9054)
+
+Extractors
++ [jwplatform] Support DASH streams in JWPlayer
++ [jwplatform] Support old-style JWPlayer playlists
++ [byutv:event] Add extractor
+* [periscope:user] Fix extraction (#10820)
+* [dctp] Fix extraction (#10734)
++ [instagram] Extract video dimensions (#10790)
++ [tvland] Extend URL regular expression (#10812)
++ [vgtv] Add support for tv.aftonbladet.se (#10800)
+- [aftonbladet] Remove extractor
+* [vk] Fix timestamp and view count extraction (#10760)
++ [vk] Add support for running and finished live streams (#10799)
++ [leeco] Recognize more Le Sports URLs (#10794)
++ [instagram] Extract comments (#10788)
++ [ketnet] Extract mzsource formats (#10770)
+* [limelight:media] Improve HTTP formats extraction
+
+
+version 2016.09.27
 
 Core
 + Add hdcore query parameter to akamai f4m formats

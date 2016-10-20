@@ -31,7 +31,6 @@ from .aenetworks import (
     HistoryTopicIE,
 )
 from .afreecatv import AfreecaTVIE
-from .aftonbladet import AftonbladetIE
 from .airmozilla import AirMozillaIE
 from .aljazeera import AlJazeeraIE
 from .alphaporno import AlphaPornoIE
@@ -67,6 +66,7 @@ from .arte import (
     ArteTVDDCIE,
     ArteTVMagazineIE,
     ArteTVEmbedIE,
+    TheOperaPlatformIE,
     ArteTVPlaylistIE,
 )
 from .atresplayer import AtresPlayerIE
@@ -94,7 +94,7 @@ from .bbc import (
 from .beeg import BeegIE
 from .behindkink import BehindKinkIE
 from .bellmedia import BellMediaIE
-from .beatportpro import BeatportProIE
+from .beatport import BeatportIE
 from .bet import BetIE
 from .bigflix import BigflixIE
 from .bild import BildIE
@@ -117,7 +117,10 @@ from .brightcove import (
     BrightcoveNewIE,
 )
 from .buzzfeed import BuzzFeedIE
-from .byutv import BYUtvIE
+from .byutv import (
+    BYUtvIE,
+    BYUtvEventIE,
+)
 from .c56 import C56IE
 from .camdemy import (
     CamdemyIE,
@@ -184,7 +187,10 @@ from .comedycentral import (
 )
 from .comcarcoff import ComCarCoffIE
 from .commonmistakes import CommonMistakesIE, UnicodeBOMIE
-from .commonprotocols import RtmpIE
+from .commonprotocols import (
+    MmsIE,
+    RtmpIE,
+)
 from .condenast import CondeNastIE
 from .cracked import CrackedIE
 from .crackle import CrackleIE
@@ -343,7 +349,10 @@ from .goshgay import GoshgayIE
 from .gputechconf import GPUTechConfIE
 from .groupon import GrouponIE
 from .hark import HarkIE
-from .hbo import HBOIE
+from .hbo import (
+    HBOIE,
+    HBOEpisodeIE,
+)
 from .hearthisat import HearThisAtIE
 from .heise import HeiseIE
 from .hellporno import HellPornoIE
@@ -364,6 +373,7 @@ from .hrti import (
     HRTiIE,
     HRTiPlaylistIE,
 )
+from .huajiao import HuajiaoIE
 from .huffpost import HuffPostIE
 from .hypem import HypemIE
 from .iconosquare import IconosquareIE
@@ -435,6 +445,7 @@ from .lcp import (
 )
 from .learnr import LearnrIE
 from .lecture2go import Lecture2GoIE
+from .lego import LEGOIE
 from .lemonde import LemondeIE
 from .leeco import (
     LeIE,
@@ -635,6 +646,7 @@ from .nytimes import (
     NYTimesArticleIE,
 )
 from .nuvid import NuvidIE
+from .nzz import NZZIE
 from .odatv import OdaTVIE
 from .odnoklassniki import OdnoklassnikiIE
 from .oktoberfesttv import OktoberfestTVIE
@@ -888,8 +900,10 @@ from .theplatform import (
 from .thescene import TheSceneIE
 from .thesixtyone import TheSixtyOneIE
 from .thestar import TheStarIE
+from .theweatherchannel import TheWeatherChannelIE
 from .thisamericanlife import ThisAmericanLifeIE
 from .thisav import ThisAVIE
+from .thisoldhouse import ThisOldHouseIE
 from .threeqsdn import ThreeQSDNIE
 from .tinypic import TinyPicIE
 from .tlc import TlcDeIE
@@ -904,6 +918,7 @@ from .tnaflix import (
     MovieFapIE,
 )
 from .toggle import ToggleIE
+from .tonline import TOnlineIE
 from .toutv import TouTvIE
 from .toypics import ToypicsUserIE, ToypicsIE
 from .traileraddict import TrailerAddictIE
