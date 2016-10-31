@@ -408,6 +408,10 @@ from .ivi import (
 from .ivideon import IvideonIE
 from .iwara import IwaraIE
 from .izlesene import IzleseneIE
+from .jamendo import (
+    JamendoIE,
+    JamendoAlbumIE,
+)
 from .jeuxvideo import JeuxVideoIE
 from .jove import JoveIE
 from .jwplatform import JWPlatformIE
@@ -601,6 +605,7 @@ from .ninecninemedia import (
 from .ninegag import NineGagIE
 from .ninenow import NineNowIE
 from .nintendo import NintendoIE
+from .nobelprize import NobelPrizeIE
 from .noco import NocoIE
 from .normalboots import NormalbootsIE
 from .nosvideo import NosVideoIE
@@ -667,6 +672,7 @@ from .orf import (
     ORFFM4IE,
     ORFIPTVIE,
 )
+from .pandatv import PandaTVIE
 from .pandoratv import PandoraTVIE
 from .parliamentliveuk import ParliamentLiveUKIE
 from .patreon import PatreonIE
@@ -740,6 +746,10 @@ from .rbmaradio import RBMARadioIE
 from .rds import RDSIE
 from .redtube import RedTubeIE
 from .regiotv import RegioTVIE
+from .rentv import (
+    RENTVIE,
+    RENTVArticleIE,
+)
 from .restudy import RestudyIE
 from .reuters import ReutersIE
 from .reverbnation import ReverbNationIE
@@ -796,7 +806,10 @@ from .sendtonews import SendtoNewsIE
 from .servingsys import ServingSysIE
 from .sexu import SexuIE
 from .shahid import ShahidIE
-from .shared import SharedIE
+from .shared import (
+    SharedIE,
+    VivoIE,
+)
 from .sharesix import ShareSixIE
 from .sina import SinaIE
 from .sixplay import SixPlayIE

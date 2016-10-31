@@ -1,7 +1,57 @@
-version <unreleased>
+version 2016.10.30
 
 Extractors
+* [facebook] Improve 1080P video detection (#11073)
+* [imgur] Recognize /r/ URLs (#11071)
+* [beeg] Fix extraction (#11069)
+* [openload] Fix extraction (#10408)
+* [gvsearch] Modernize and fix search request (#11051)
+* [adultswim] Fix extraction (#10979)
++ [nobelprize] Add support for nobelprize.org (#9999)
+* [hornbunny] Fix extraction (#10981)
+* [tvp] Improve video id extraction (#10585)
+
+
+version 2016.10.26
+
+Extractors
++ [rentv] Add support for ren.tv (#10620)
++ [ard] Detect unavailable videos (#11018)
+* [vk] Fix extraction (#11022)
+
+
+version 2016.10.25
+
+Core
+* Running youtube-dl in the background is fixed (#10996, #10706, #955)
+
+Extractors
++ [jamendo] Add support for jamendo.com (#10132, #10736)
++ [pandatv] Add support for panda.tv (#10736)
++ [dotsub] Support Vimeo embed (#10964)
+* [litv] Fix extraction
++ [vimeo] Delegate ondemand redirects to ondemand extractor (#10994)
+* [vivo] Fix extraction (#11003)
++ [twitch:stream] Add support for rebroadcasts (#10995)
+* [pluralsight] Fix subtitles conversion (#10990)
+
+
+version 2016.10.21.1
+
+Extractors
++ [pluralsight] Process all clip URLs (#10984)
+
+
+version 2016.10.21
+
+Core
+- Disable thumbnails embedding in mkv
++ Add support for Comcast multiple-system operator (#10819)
+
+Extractors
+* [pluralsight] Adapt to new API (#10972)
 * [openload] Fix extraction (#10408, #10971)
++ [natgeo] Extract m3u8 formats (#10959)
 
 
 version 2016.10.19

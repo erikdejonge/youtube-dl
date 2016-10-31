@@ -332,6 +332,8 @@
  - **ivideon**: Ivideon TV
  - **Iwara**
  - **Izlesene**
+ - **Jamendo**
+ - **JamendoAlbum**
  - **JeuxVideo**
  - **Jove**
  - **jpopsuki.tv**
@@ -486,6 +488,7 @@
  - **Nintendo**
  - **njoy**: N-JOY
  - **njoy:embed**
+ - **NobelPrize**
  - **Noco**
  - **Normalboots**
  - **NosVideo**
@@ -527,6 +530,7 @@
  - **orf:iptv**: iptv.ORF.at
  - **orf:oe1**: Radio Österreich 1
  - **orf:tvthek**: ORF TVthek
+ - **PandaTV**: 熊猫TV
  - **pandora.tv**: 판도라TV
  - **parliamentlive.tv**: UK parliament videos
  - **Patreon**
@@ -586,6 +590,8 @@
  - **RDS**: RDS.ca
  - **RedTube**
  - **RegioTV**
+ - **RENTV**
+ - **RENTVArticle**
  - **Restudy**
  - **Reuters**
  - **ReverbNation**
@@ -641,7 +647,7 @@
  - **ServingSys**
  - **Sexu**
  - **Shahid**
- - **Shared**: shared.sx and vivo.sx
+ - **Shared**: shared.sx
  - **ShareSix**
  - **Sina**
  - **SixPlay**
@@ -848,6 +854,7 @@
  - **Vimple**: Vimple - one-click video hosting
  - **Vine**
  - **vine:user**
+ - **Vivo**: vivo.sx
  - **vk**: VK
  - **vk:uservideos**: VK - User's Videos
  - **vk:wallpost**
