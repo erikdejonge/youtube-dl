@@ -86,6 +86,11 @@ std_headers = {
 }
 
 
+USER_AGENTS = {
+    'Safari': 'Mozilla/5.0 (X11; Linux x86_64; rv:10.0) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27',
+}
+
+
 NO_DEFAULT = object()
 
 ENGLISH_MONTH_NAMES = [
@@ -1691,6 +1696,20 @@ def url_basename(url):
     return path.strip('/').split('/')[-1]
 
 
+def base_url(url):
+    return re.match(r'https?://[^?#&]+/', url).group()
+
+
+def urljoin(base, path):
+    if not isinstance(path, compat_str) or not path:
+        return None
+    if re.match(r'^(?:https?:)?//', path):
+        return path
+    if not isinstance(base, compat_str) or not re.match(r'^(?:https?:)?//', base):
+        return None
+    return compat_urlparse.urljoin(base, path)
+
+
 class HEADRequest(compat_urllib_request.Request):
     def get_method(self):
         return 'HEAD'
@@ -2345,11 +2364,18 @@ def _match_one(filter_part, dct):
     m = operator_rex.search(filter_part)
     if m:
         op = COMPARISON_OPERATORS[m.group('op')]
-        if m.group('strval') is not None:
+        actual_value = dct.get(m.group('key'))
+        if (m.group('strval') is not None or
+            # If the original field is a string and matching comparisonvalue is
+            # a number we should respect the origin of the original field
+            # and process comparison value as a string (see
+            # https://github.com/rg3/youtube-dl/issues/11082).
+            actual_value is not None and m.group('intval') is not None and
+                isinstance(actual_value, compat_str)):
             if m.group('op') not in ('=', '!='):
                 raise ValueError(
                     'Operator %s does not support string values!' % m.group('op'))
-            comparison_value = m.group('strval')
+            comparison_value = m.group('strval') or m.group('intval')
         else:
             try:
                 comparison_value = int(m.group('intval'))
@@ -2361,7 +2387,6 @@ def _match_one(filter_part, dct):
                     raise ValueError(
                         'Invalid integer value %r in filter part %r' % (
                             m.group('intval'), filter_part))
-        actual_value = dct.get(m.group('key'))
         if actual_value is None:
             return m.group('none_inclusive')
         return op(actual_value, comparison_value)

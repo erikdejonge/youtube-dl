@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+import random
 import re
 
 from .common import InfoExtractor
@@ -14,6 +15,25 @@ from ..utils import (
 
 
 class NRKBaseIE(InfoExtractor):
+    _faked_ip = None
+
+    def _download_webpage_handle(self, *args, **kwargs):
+        # NRK checks X-Forwarded-For HTTP header in order to figure out the
+        # origin of the client behind proxy. This allows to bypass geo
+        # restriction by faking this header's value to some Norway IP.
+        # We will do so once we encounter any geo restriction error.
+        if self._faked_ip:
+            # NB: str is intentional
+            kwargs.setdefault(str('headers'), {})['X-Forwarded-For'] = self._faked_ip
+        return super(NRKBaseIE, self)._download_webpage_handle(*args, **kwargs)
+
+    def _fake_ip(self):
+        # Use fake IP from 37.191.128.0/17 in order to workaround geo
+        # restriction
+        def octet(lb=0, ub=255):
+            return random.randint(lb, ub)
+        self._faked_ip = '37.191.%d.%d' % (octet(128), octet())
+
     def _real_extract(self, url):
         video_id = self._match_id(url)
 
@@ -24,7 +44,16 @@ class NRKBaseIE(InfoExtractor):
         title = data.get('fullTitle') or data.get('mainTitle') or data['title']
         video_id = data.get('id') or video_id
 
+        http_headers = {'X-Forwarded-For': self._faked_ip} if self._faked_ip else {}
+
         entries = []
+
+        conviva = data.get('convivaStatistics') or {}
+        live = (data.get('mediaElementType') == 'Live' or
+                data.get('isLive') is True or conviva.get('isLive'))
+
+        def make_title(t):
+            return self._live_title(t) if live else t
 
         media_assets = data.get('mediaAssets')
         if media_assets and isinstance(media_assets, list):
@@ -39,6 +68,13 @@ class NRKBaseIE(InfoExtractor):
                 if not formats:
                     continue
                 self._sort_formats(formats)
+
+                # Some f4m streams may not work with hdcore in fragments' URLs
+                for f in formats:
+                    extra_param = f.get('extra_param_to_segment_url')
+                    if extra_param and 'hdcore' in extra_param:
+                        del f['extra_param_to_segment_url']
+
                 entry_id, entry_title = video_id_and_title(num)
                 duration = parse_duration(asset.get('duration'))
                 subtitles = {}
@@ -50,10 +86,11 @@ class NRKBaseIE(InfoExtractor):
                         })
                 entries.append({
                     'id': asset.get('carrierId') or entry_id,
-                    'title': entry_title,
+                    'title': make_title(entry_title),
                     'duration': duration,
                     'subtitles': subtitles,
                     'formats': formats,
+                    'http_headers': http_headers,
                 })
 
         if not entries:
@@ -64,18 +101,30 @@ class NRKBaseIE(InfoExtractor):
                 duration = parse_duration(data.get('duration'))
                 entries = [{
                     'id': video_id,
-                    'title': title,
+                    'title': make_title(title),
                     'duration': duration,
                     'formats': formats,
                 }]
 
         if not entries:
-            if data.get('usageRights', {}).get('isGeoBlocked'):
-                raise ExtractorError(
-                    'NRK har ikke rettigheter til å vise dette programmet utenfor Norge',
-                    expected=True)
+            message_type = data.get('messageType', '')
+            # Can be ProgramIsGeoBlocked or ChannelIsGeoBlocked*
+            if 'IsGeoBlocked' in message_type and not self._faked_ip:
+                self.report_warning(
+                    'Video is geo restricted, trying to fake IP')
+                self._fake_ip()
+                return self._real_extract(url)
 
-        conviva = data.get('convivaStatistics') or {}
+            MESSAGES = {
+                'ProgramRightsAreNotReady': 'Du kan dessverre ikke se eller høre programmet',
+                'ProgramRightsHasExpired': 'Programmet har gått ut',
+                'ProgramIsGeoBlocked': 'NRK har ikke rettigheter til å vise dette programmet utenfor Norge',
+            }
+            raise ExtractorError(
+                '%s said: %s' % (self.IE_NAME, MESSAGES.get(
+                    message_type, message_type)),
+                expected=True)
+
         series = conviva.get('seriesName') or data.get('seriesTitle')
         episode = conviva.get('episodeName') or data.get('episodeNumberOrDate')
 
@@ -220,6 +269,19 @@ class NRKTVIE(NRKBaseIE):
         'skip': 'Only works from Norway',
     }, {
         'url': 'https://radio.nrk.no/serie/dagsnytt/NPUB21019315/12-07-2015#',
+        'only_matching': True,
+    }]
+
+
+class NRKTVDirekteIE(NRKTVIE):
+    IE_DESC = 'NRK TV Direkte and NRK Radio Direkte'
+    _VALID_URL = r'https?://(?:tv|radio)\.nrk\.no/direkte/(?P<id>[^/?#&]+)'
+
+    _TESTS = [{
+        'url': 'https://tv.nrk.no/direkte/nrk1',
+        'only_matching': True,
+    }, {
+        'url': 'https://radio.nrk.no/direkte/p1_oslo_akershus',
         'only_matching': True,
     }]
 

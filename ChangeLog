@@ -1,3 +1,200 @@
+version <unreleased>
+
+Extractors
+* [kaltura] Fix wrong widget ID in some cases (#11480)
+
+
+version 2016.12.18
+
+Core
++ [extractor/common] Recognize DASH formats in html5 media entries
+
+Extractors
++ [ccma] Add support for ccma.cat (#11359)
+* [laola1tv] Improve extraction
++ [laola1tv] Add support embed URLs (#11460)
+* [nbc] Fix extraction for MSNBC videos (#11466)
+* [twitch] Adapt to new videos pages URL schema (#11469)
++ [meipai] Add support for meipai.com (#10718)
+* [jwplatform] Improve subtitles and duration extraction
++ [ondemandkorea] Add support for ondemandkorea.com (#10772)
++ [vvvvid] Add support for vvvvid.it (#5915)
+
+
+version 2016.12.15
+
+Core
++ [utils] Add convenience urljoin
+
+Extractors
++ [openload] Recognize oload.tv URLs (#10408)
++ [facebook] Recognize .onion URLs (#11443)
+* [vlive] Fix extraction (#11375, #11383)
++ [canvas] Extract DASH formats
++ [melonvod] Add support for vod.melon.com (#11419)
+
+
+version 2016.12.12
+
+Core
++ [utils] Add common user agents map
++ [common] Recognize HLS manifests that contain video only formats (#11394)
+
+Extractors
++ [dplay] Use Safari user agent for HLS (#11418)
++ [facebook] Detect login required error message
+* [facebook] Improve video selection (#11390)
++ [canalplus] Add another video id pattern (#11399)
+* [mixcloud] Relax URL regular expression (#11406)
+* [ctvnews] Relax URL regular expression (#11394)
++ [rte] Capture and output error message (#7746, #10498)
++ [prosiebensat1] Add support for DASH formats
+* [srgssr] Improve extraction for geo restricted videos (#11089)
+* [rts] Improve extraction for geo restricted videos (#4989)
+
+
+version 2016.12.09
+
+Core
+* [socks] Fix error reporting (#11355)
+
+Extractors
+* [openload] Fix extraction (#10408)
+* [pandoratv] Fix extraction (#11023)
++ [telebruxelles] Add support for emission URLs
+* [telebruxelles] Extract all formats
++ [bloomberg] Add another video id regular expression (#11371)
+* [fusion] Update ooyala id regular expression (#11364)
++ [1tv] Add support for playlists (#11335)
+* [1tv] Improve extraction (#11335)
++ [aenetworks] Extract more formats (#11321)
++ [thisoldhouse] Recognize /tv-episode/ URLs (#11271)
+
+
+version 2016.12.01
+
+Extractors
+* [soundcloud] Update client id (#11327)
+* [ruutu] Detect DRM protected videos
++ [liveleak] Add support for youtube embeds (#10688)
+* [spike] Fix full episodes support (#11312)
+* [comedycentral] Fix full episodes support
+* [normalboots] Rewrite in terms of JWPlatform (#11184)
+* [teamfourstar] Rewrite in terms of JWPlatform (#11184)
+- [screenwavemedia] Remove extractor (#11184)
+
+
+version 2016.11.27
+
+Extractors
++ [webcaster] Add support for webcaster.pro
++ [azubu] Add support for azubu.uol.com.br (#11305)
+* [viki] Prefer hls formats
+* [viki] Fix rtmp formats extraction (#11255)
+* [puls4] Relax URL regular expression (#11267)
+* [vevo] Improve artist extraction (#10911)
+* [mitele] Relax URL regular expression and extract more metadata (#11244)
++ [cbslocal] Recognize New York site (#11285)
++ [youtube:playlist] Pass disable_polymer in URL query (#11193)
+
+
+version 2016.11.22
+
+Extractors
+* [hellporno] Fix video extension extraction (#11247)
++ [hellporno] Add support for hellporno.net (#11247)
++ [amcnetworks] Recognize more BBC America URLs (#11263)
+* [funnyordie] Improve extraction (#11208)
+* [extractor/generic] Improve limelight embeds support
+- [crunchyroll] Remove ScaledBorderAndShadow from ASS subtitles (#8207, #9028)
+* [bandcamp] Fix free downloads extraction and extract all formats (#11067)
+* [twitter:card] Relax URL regular expression (#11225)
++ [tvanouvelles] Add support for tvanouvelles.ca (#10616)
+
+
+version 2016.11.18
+
+Extractors
+* [youtube:live] Relax URL regular expression (#11164)
+* [openload] Fix extraction (#10408, #11122)
+* [vlive] Prefer locale over language for subtitles id (#11203)
+
+
+version 2016.11.14.1
+
+Core
++ [downoader/fragment,f4m,hls] Respect HTTP headers from info dict
+* [extractor/common] Fix media templates with Bandwidth substitution pattern in
+  MPD manifests (#11175)
+* [extractor/common] Improve thumbnail extraction from JSON-LD
+
+Extractors
++ [nrk] Workaround geo restriction
++ [nrk] Improve error detection and messages
++ [afreecatv] Add support for vod.afreecatv.com (#11174)
+* [cda] Fix and improve extraction (#10929, #10936)
+* [plays] Fix extraction (#11165)
+* [eagleplatform] Fix extraction (#11160)
++ [audioboom] Recognize /posts/ URLs (#11149)
+
+
+version 2016.11.08.1
+
+Extractors
+* [espn:article] Fix support for espn.com articles
+* [franceculture] Fix extraction (#11140)
+
+
+version 2016.11.08
+
+Extractors
+* [tmz:article] Fix extraction (#11052)
+* [espn] Fix extraction (#11041)
+* [mitele] Fix extraction after website redesign (#10824)
+- [ard] Remove age restriction check (#11129)
+* [generic] Improve support for pornhub.com embeds (#11100)
++ [generic] Add support for redtube.com embeds (#11099)
++ [generic] Add support for drtuber.com embeds (#11098)
++ [redtube] Add support for embed URLs
++ [drtuber] Add support for embed URLs
++ [yahoo] Improve content id extraction (#11088)
+* [toutv] Relax URL regular expression (#11121)
+
+
+version 2016.11.04
+
+Core
+* [extractor/common] Tolerate malformed RESOLUTION attribute in m3u8
+  manifests (#11113)
+* [downloader/ism] Fix AVC Decoder Configuration Record
+
+Extractors
++ [fox9] Add support for fox9.com (#11110)
++ [anvato] Extract more metadata and improve formats extraction
+* [vodlocker] Improve removed videos detection (#11106)
++ [vzaar] Add support for vzaar.com (#11093)
++ [vice] Add support for uplynk preplay videos (#11101)
+* [tubitv] Fix extraction (#11061)
++ [shahid] Add support for authentication (#11091)
++ [radiocanada] Add subtitles support (#11096)
++ [generic] Add support for ISM manifests
+
+
+version 2016.11.02
+
+Core
++ Add basic support for Smooth Streaming protocol (#8118, #10969)
+* Improve MPD manifest base URL extraction (#10909, #11079)
+* Fix --match-filter for int-like strings (#11082)
+
+Extractors
++ [mva] Add support for ISM formats
++ [msn] Add support for ISM formats
++ [onet] Add support for ISM formats
++ [tvp] Add support for ISM formats
++ [nicknight] Add support for nicknight sites (#10769)
+
+
 version 2016.10.30
 
 Extractors

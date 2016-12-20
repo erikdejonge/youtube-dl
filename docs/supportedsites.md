@@ -131,6 +131,7 @@
  - **cbsnews**: CBS News
  - **cbsnews:livevideo**: CBS News Live Videos
  - **CBSSports**
+ - **CCMA**
  - **CCTV**
  - **CDA**
  - **CeskaTelevize**
@@ -158,6 +159,7 @@
  - **CollegeRama**
  - **ComCarCoff**
  - **ComedyCentral**
+ - **ComedyCentralFullEpisodes**
  - **ComedyCentralShortname**
  - **ComedyCentralTV**
  - **CondeNast**: Condé Nast media group: Allure, Architectural Digest, Ars Technica, Bon Appétit, Brides, Condé Nast, Condé Nast Traveler, Details, Epicurious, GQ, Glamour, Golf Digest, SELF, Teen Vogue, The New Yorker, Vanity Fair, Vogue, W Magazine, WIRED
@@ -225,6 +227,7 @@
  - **EroProfile**
  - **Escapist**
  - **ESPN**
+ - **ESPNArticle**
  - **EsriVideo**
  - **Europa**
  - **EveryonesMixtape**
@@ -247,6 +250,7 @@
  - **FootyRoom**
  - **Formula1**
  - **FOX**
+ - **FOX9**
  - **Foxgay**
  - **foxnews**: Fox News and Fox Business Video
  - **foxnews:article**
@@ -362,6 +366,7 @@
  - **kuwo:song**: 酷我音乐
  - **la7.it**
  - **Laola1Tv**
+ - **Laola1TvEmbed**
  - **LCI**
  - **Lcp**
  - **LcpPlay**
@@ -399,6 +404,8 @@
  - **MatchTV**
  - **MDR**: MDR.DE and KiKA
  - **media.ccc.de**
+ - **Meipai**: 美拍
+ - **MelonVOD**
  - **META**
  - **metacafe**
  - **Metacritic**
@@ -483,6 +490,7 @@
  - **nhl.com:videocenter:category**: NHL videocenter category
  - **nick.com**
  - **nick.de**
+ - **nicknight**
  - **niconico**: ニコニコ動画
  - **NiconicoPlaylist**
  - **Nintendo**
@@ -519,6 +527,7 @@
  - **Odnoklassniki**
  - **OktoberfestTV**
  - **on.aol.com**
+ - **OnDemandKorea**
  - **onet.tv**
  - **onet.tv:channel**
  - **OnionStudios**
@@ -640,7 +649,6 @@
  - **Screencast**
  - **ScreencastOMatic**
  - **ScreenJunkies**
- - **ScreenwaveMedia**
  - **Seeker**
  - **SenateISVP**
  - **SendtoNews**
@@ -712,7 +720,7 @@
  - **teachertube:user:collection**: teachertube.com user and collection videos
  - **TeachingChannel**
  - **Teamcoco**
- - **TeamFour**
+ - **TeamFourStar**
  - **TechTalks**
  - **techtv.mit.edu**
  - **ted**
@@ -768,6 +776,8 @@
  - **TV2Article**
  - **TV3**
  - **TV4**: tv4.se and tv4play.se
+ - **TVANouvelles**
+ - **TVANouvellesArticle**
  - **TVC**
  - **TVCArticle**
  - **tvigle**: Интернет-телевидение Tvigle.ru
@@ -779,10 +789,13 @@
  - **Tweakers**
  - **twitch:chapter**
  - **twitch:clips**
- - **twitch:past_broadcasts**
  - **twitch:profile**
  - **twitch:stream**
  - **twitch:video**
+ - **twitch:videos:all**
+ - **twitch:videos:highlights**
+ - **twitch:videos:past-broadcasts**
+ - **twitch:videos:uploads**
  - **twitch:vod**
  - **twitter**
  - **twitter:amplify**
@@ -868,7 +881,9 @@
  - **VRT**
  - **vube**: Vube.com
  - **VuClip**
+ - **VVVVID**
  - **VyboryMos**
+ - **Vzaar**
  - **Walla**
  - **washingtonpost**
  - **washingtonpost:article**
@@ -876,6 +891,8 @@
  - **WatchIndianPorn**: Watch Indian Porn
  - **WDR**
  - **wdr:mobile**
+ - **Webcaster**
+ - **WebcasterFeed**
  - **WebOfStories**
  - **WebOfStoriesPlaylist**
  - **WeiqiTV**: WQTV

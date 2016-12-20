@@ -664,7 +664,7 @@ $ youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best'
 # Download best format available but not better that 480p
 $ youtube-dl -f 'bestvideo[height<=480]+bestaudio/best[height<=480]'
 
-# Download best video only format but no bigger that 50 MB
+# Download best video only format but no bigger than 50 MB
 $ youtube-dl -f 'best[filesize<50M]'
 
 # Download best format available via direct link over HTTP/HTTPS protocol
@@ -758,7 +758,7 @@ Once the video is fully downloaded, use any video player, such as [mpv](https://
 
 ### I extracted a video URL with `-g`, but it does not play on another machine / in my webbrowser.
 
-It depends a lot on the service. In many cases, requests for the video (to download/play it) must come from the same IP address and with the same cookies.  Use the `--cookies` option to write the required cookies into a file, and advise your downloader to read cookies from that file. Some sites also require a common user agent to be used, use `--dump-user-agent` to see the one in use by youtube-dl.
+It depends a lot on the service. In many cases, requests for the video (to download/play it) must come from the same IP address and with the same cookies and/or HTTP headers. Use the `--cookies` option to write the required cookies into a file, and advise your downloader to read cookies from that file. Some sites also require a common user agent to be used, use `--dump-user-agent` to see the one in use by youtube-dl. You can also get necessary cookies and HTTP headers from JSON output obtained with `--dump-json`.
 
 It may be beneficial to use IPv6; in some cases, the restrictions are only applied to IPv4. Some services (sometimes only for a subset of videos) do not restrict the video URL by IP address, cookie, or user-agent, but these are the exception rather than the rule.
 
@@ -930,7 +930,7 @@ If you want to create a build of youtube-dl yourself, you'll need
 
 ### Adding support for a new site
 
-If you want to add support for a new site, first of all **make sure** this site is **not dedicated to [copyright infringement](#can-you-add-support-for-this-anime-video-site-or-site-which-shows-current-movies-for-free)**. youtube-dl does **not support** such sites thus pull requests adding support for them **will be rejected**.
+If you want to add support for a new site, first of all **make sure** this site is **not dedicated to [copyright infringement](README.md#can-you-add-support-for-this-anime-video-site-or-site-which-shows-current-movies-for-free)**. youtube-dl does **not support** such sites thus pull requests adding support for them **will be rejected**.
 
 After you have ensured this site is distributing it's content legally, you can follow this quick list (assuming your service is called `yourextractor`):
 

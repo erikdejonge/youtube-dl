@@ -1,11 +1,8 @@
 # coding: utf-8
-from __future__ import unicode_literals, division
+from __future__ import unicode_literals
 
 from .common import InfoExtractor
-from ..compat import (
-    compat_chr,
-    compat_ord,
-)
+from ..compat import compat_chr
 from ..utils import (
     determine_ext,
     ExtractorError,
@@ -13,7 +10,7 @@ from ..utils import (
 
 
 class OpenloadIE(InfoExtractor):
-    _VALID_URL = r'https?://openload\.(?:co|io)/(?:f|embed)/(?P<id>[a-zA-Z0-9-_]+)'
+    _VALID_URL = r'https?://(?:openload\.(?:co|io)|oload\.tv)/(?:f|embed)/(?P<id>[a-zA-Z0-9-_]+)'
 
     _TESTS = [{
         'url': 'https://openload.co/f/kUEfGclsU9o',
@@ -54,6 +51,9 @@ class OpenloadIE(InfoExtractor):
         # for title and ext
         'url': 'https://openload.co/embed/Sxz5sADo82g/',
         'only_matching': True,
+    }, {
+        'url': 'https://oload.tv/embed/KnG-kKZdcfY/',
+        'only_matching': True,
     }]
 
     def _real_extract(self, url):
@@ -63,29 +63,20 @@ class OpenloadIE(InfoExtractor):
         if 'File not found' in webpage or 'deleted by the owner' in webpage:
             raise ExtractorError('File not found', expected=True)
 
-        # The following decryption algorithm is written by @yokrysty and
-        # declared to be freely used in youtube-dl
-        # See https://github.com/rg3/youtube-dl/issues/10408
-        enc_data = self._html_search_regex(
-            r'<span[^>]*>([^<]+)</span>\s*<span[^>]*>[^<]+</span>\s*<span[^>]+id="streamurl"',
-            webpage, 'encrypted data')
+        ol_id = self._search_regex(
+            '<span[^>]+id="[a-zA-Z0-9]+x"[^>]*>([0-9]+)</span>',
+            webpage, 'openload ID')
 
-        magic = compat_ord(enc_data[-1])
-        video_url_chars = []
+        first_two_chars = int(float(ol_id[0:][:2]))
+        urlcode = ''
+        num = 2
 
-        for idx, c in enumerate(enc_data):
-            j = compat_ord(c)
-            if j == magic:
-                j -= 1
-            elif j == magic - 1:
-                j += 1
-            if j >= 33 and j <= 126:
-                j = ((j + 14) % 94) + 33
-            if idx == len(enc_data) - 1:
-                j += 3
-            video_url_chars += compat_chr(j)
+        while num < len(ol_id):
+            urlcode += compat_chr(int(float(ol_id[num:][:3])) -
+                                  first_two_chars * int(float(ol_id[num + 3:][:2])))
+            num += 5
 
-        video_url = 'https://openload.co/stream/%s?mime=true' % ''.join(video_url_chars)
+        video_url = 'https://openload.co/stream/' + urlcode
 
         title = self._og_search_title(webpage, default=None) or self._search_regex(
             r'<span[^>]+class=["\']title["\'][^>]*>([^<]+)', webpage,
@@ -104,5 +95,4 @@ class OpenloadIE(InfoExtractor):
             'ext': determine_ext(title),
             'subtitles': subtitles,
         }
-
         return info_dict
