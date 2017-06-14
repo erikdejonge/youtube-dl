@@ -29,7 +29,6 @@ import random
 from .compat import (
     compat_basestring,
     compat_cookiejar,
-    compat_expanduser,
     compat_get_terminal_size,
     compat_http_client,
     compat_kwargs,
@@ -54,10 +53,12 @@ from .utils import (
     encode_compat_str,
     encodeFilename,
     error_to_compat_str,
+    expand_path,
     ExtractorError,
     format_bytes,
     formatSeconds,
     GeoRestrictedError,
+    int_or_none,
     ISO3166Utils,
     locked_file,
     make_HTTPS_handler,
@@ -302,6 +303,17 @@ class YoutubeDL(object):
                         postprocessor.
     """
 
+    _NUMERIC_FIELDS = set((
+        'width', 'height', 'tbr', 'abr', 'asr', 'vbr', 'fps', 'filesize', 'filesize_approx',
+        'timestamp', 'upload_year', 'upload_month', 'upload_day',
+        'duration', 'view_count', 'like_count', 'dislike_count', 'repost_count',
+        'average_rating', 'comment_count', 'age_limit',
+        'start_time', 'end_time',
+        'chapter_number', 'season_number', 'episode_number',
+        'track_number', 'disc_number', 'release_year',
+        'playlist_index',
+    ))
+
     params = None
     _ies = []
     _pps = []
@@ -370,10 +382,10 @@ class YoutubeDL(object):
                 else:
                     raise
 
-        if (sys.version_info >= (3,) and sys.platform != 'win32' and
+        if (sys.platform != 'win32' and
                 sys.getfilesystemencoding() in ['ascii', 'ANSI_X3.4-1968'] and
                 not params.get('restrictfilenames', False)):
-            # On Python 3, the Unicode filesystem API will throw errors (#1474)
+            # Unicode filesystem API will throw errors (#1474, #13027)
             self.report_warning(
                 'Assuming --restrict-filenames since file system encoding '
                 'cannot encode all characters. '
@@ -498,24 +510,25 @@ class YoutubeDL(object):
     def to_console_title(self, message):
         if not self.params.get('consoletitle', False):
             return
-        if compat_os_name == 'nt' and ctypes.windll.kernel32.GetConsoleWindow():
-            # c_wchar_p() might not be necessary if `message` is
-            # already of type unicode()
-            ctypes.windll.kernel32.SetConsoleTitleW(ctypes.c_wchar_p(message))
+        if compat_os_name == 'nt':
+            if ctypes.windll.kernel32.GetConsoleWindow():
+                # c_wchar_p() might not be necessary if `message` is
+                # already of type unicode()
+                ctypes.windll.kernel32.SetConsoleTitleW(ctypes.c_wchar_p(message))
         elif 'TERM' in os.environ:
             self._write_string('\033]0;%s\007' % message, self._screen_file)
 
     def save_console_title(self):
         if not self.params.get('consoletitle', False):
             return
-        if 'TERM' in os.environ:
+        if compat_os_name != 'nt' and 'TERM' in os.environ:
             # Save the title on stack
             self._write_string('\033[22;0t', self._screen_file)
 
     def restore_console_title(self):
         if not self.params.get('consoletitle', False):
             return
-        if 'TERM' in os.environ:
+        if compat_os_name != 'nt' and 'TERM' in os.environ:
             # Restore the title from stack
             self._write_string('\033[23;0t', self._screen_file)
 
@@ -638,22 +651,11 @@ class YoutubeDL(object):
                     r'%%(\1)0%dd' % field_size_compat_map[mobj.group('field')],
                     outtmpl)
 
-            NUMERIC_FIELDS = set((
-                'width', 'height', 'tbr', 'abr', 'asr', 'vbr', 'fps', 'filesize', 'filesize_approx',
-                'upload_year', 'upload_month', 'upload_day',
-                'duration', 'view_count', 'like_count', 'dislike_count', 'repost_count',
-                'average_rating', 'comment_count', 'age_limit',
-                'start_time', 'end_time',
-                'chapter_number', 'season_number', 'episode_number',
-                'track_number', 'disc_number', 'release_year',
-                'playlist_index',
-            ))
-
             # Missing numeric fields used together with integer presentation types
             # in format specification will break the argument substitution since
             # string 'NA' is returned for missing fields. We will patch output
             # template for missing fields to meet string presentation type.
-            for numeric_field in NUMERIC_FIELDS:
+            for numeric_field in self._NUMERIC_FIELDS:
                 if numeric_field not in template_dict:
                     # As of [1] format syntax is:
                     #  %[mapping_key][conversion_flags][minimum_width][.precision][length_modifier]type
@@ -672,8 +674,7 @@ class YoutubeDL(object):
                         FORMAT_RE.format(numeric_field),
                         r'%({0})s'.format(numeric_field), outtmpl)
 
-            tmpl = compat_expanduser(outtmpl)
-            filename = tmpl % template_dict
+            filename = expand_path(outtmpl % template_dict)
             # Temporary fix for #4787
             # 'Treat' all problem characters by passing filename through preferredencoding
             # to workaround encoding issues with subprocess on python2 @ Windows
@@ -837,6 +838,12 @@ class YoutubeDL(object):
                 ie_result['url'], ie_key=ie_result.get('ie_key'),
                 extra_info=extra_info, download=False, process=False)
 
+            # extract_info may return None when ignoreerrors is enabled and
+            # extraction failed with an error, don't crash and return early
+            # in this case
+            if not info:
+                return info
+
             force_properties = dict(
                 (k, v) for k, v in ie_result.items() if v is not None)
             for f in ('_type', 'url', 'ie_key'):
@@ -845,11 +852,18 @@ class YoutubeDL(object):
             new_result = info.copy()
             new_result.update(force_properties)
 
-            assert new_result.get('_type') != 'url_transparent'
+            # Extracted info may not be a video result (i.e.
+            # info.get('_type', 'video') != video) but rather an url or
+            # url_transparent. In such cases outer metadata (from ie_result)
+            # should be propagated to inner one (info). For this to happen
+            # _type of info should be overridden with url_transparent. This
+            # fixes issue from https://github.com/rg3/youtube-dl/pull/11163.
+            if new_result.get('_type') == 'url':
+                new_result['_type'] = 'url_transparent'
 
             return self.process_ie_result(
                 new_result, download=download, extra_info=extra_info)
-        elif result_type == 'playlist' or result_type == 'multi_video':
+        elif result_type in ('playlist', 'multi_video'):
             # We process each entry in the playlist
             playlist = ie_result.get('title') or ie_result.get('id')
             self.to_screen('[download] Downloading playlist: %s' % playlist)
@@ -1332,9 +1346,28 @@ class YoutubeDL(object):
         if 'title' not in info_dict:
             raise ExtractorError('Missing "title" field in extractor result')
 
-        if not isinstance(info_dict['id'], compat_str):
-            self.report_warning('"id" field is not a string - forcing string conversion')
-            info_dict['id'] = compat_str(info_dict['id'])
+        def report_force_conversion(field, field_not, conversion):
+            self.report_warning(
+                '"%s" field is not %s - forcing %s conversion, there is an error in extractor'
+                % (field, field_not, conversion))
+
+        def sanitize_string_field(info, string_field):
+            field = info.get(string_field)
+            if field is None or isinstance(field, compat_str):
+                return
+            report_force_conversion(string_field, 'a string', 'string')
+            info[string_field] = compat_str(field)
+
+        def sanitize_numeric_fields(info):
+            for numeric_field in self._NUMERIC_FIELDS:
+                field = info.get(numeric_field)
+                if field is None or isinstance(field, compat_numeric_types):
+                    continue
+                report_force_conversion(numeric_field, 'numeric', 'int')
+                info[numeric_field] = int_or_none(field)
+
+        sanitize_string_field(info_dict, 'id')
+        sanitize_numeric_fields(info_dict)
 
         if 'playlist' not in info_dict:
             # It isn't part of a playlist
@@ -1422,6 +1455,8 @@ class YoutubeDL(object):
             if 'url' not in format:
                 raise ExtractorError('Missing "url" key in result (index %d)' % i)
 
+            sanitize_string_field(format, 'format_id')
+            sanitize_numeric_fields(format)
             format['url'] = sanitize_url(format['url'])
 
             if format.get('format_id') is None:
@@ -1872,6 +1907,7 @@ class YoutubeDL(object):
         """Download a given list of URLs."""
         outtmpl = self.params.get('outtmpl', DEFAULT_OUTTMPL)
         if (len(url_list) > 1 and
+                outtmpl != '-' and
                 '%' not in outtmpl and
                 self.params.get('max_downloads') != 1):
             raise SameFileError(outtmpl)
@@ -2169,7 +2205,7 @@ class YoutubeDL(object):
         if opts_cookiefile is None:
             self.cookiejar = compat_cookiejar.CookieJar()
         else:
-            opts_cookiefile = compat_expanduser(opts_cookiefile)
+            opts_cookiefile = expand_path(opts_cookiefile)
             self.cookiejar = compat_cookiejar.MozillaCookieJar(
                 opts_cookiefile)
             if os.access(opts_cookiefile, os.R_OK):

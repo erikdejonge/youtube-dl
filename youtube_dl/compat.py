@@ -2322,6 +2322,19 @@ try:
 except ImportError:  # Python 2
     from HTMLParser import HTMLParser as compat_HTMLParser
 
+try:  # Python 2
+    from HTMLParser import HTMLParseError as compat_HTMLParseError
+except ImportError:  # Python <3.4
+    try:
+        from html.parser import HTMLParseError as compat_HTMLParseError
+    except ImportError:  # Python >3.4
+
+        # HTMLParseError has been deprecated in Python 3.3 and removed in
+        # Python 3.5. Introducing dummy exception for Python >3.5 for compatible
+        # and uniform cross-version exceptiong handling
+        class compat_HTMLParseError(Exception):
+            pass
+
 try:
     from subprocess import DEVNULL
     compat_subprocess_get_DEVNULL = lambda: DEVNULL
@@ -2692,7 +2705,7 @@ else:
                 userhome = pwent.pw_dir
             userhome = userhome.rstrip('/')
             return (userhome + path[i:]) or '/'
-    elif compat_os_name == 'nt' or compat_os_name == 'ce':
+    elif compat_os_name in ('nt', 'ce'):
         def compat_expanduser(path):
             """Expand ~ and ~user constructs.
 
@@ -2882,6 +2895,7 @@ else:
 
 
 __all__ = [
+    'compat_HTMLParseError',
     'compat_HTMLParser',
     'compat_HTTPError',
     'compat_basestring',
