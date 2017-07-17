@@ -1,3 +1,137 @@
+version 2017.07.15
+
+Core
+* [YoutubeDL] Don't expand environment variables in meta fields (#13637)
+
+Extractors
+* [spiegeltv] Delegate extraction to nexx extractor (#13159)
++ [nexx] Add support for nexx.cloud (#10807, #13465)
+* [generic] Fix rutube embeds extraction (#13641)
+* [karrierevideos] Fix title extraction (#13641)
+* [youtube] Don't capture YouTube Red ad for creator meta field (#13621)
+* [slideshare] Fix extraction (#13617)
++ [5tv] Add another video URL pattern (#13354, #13606)
+* [drtv] Make HLS and HDS extraction non fatal
+* [ted] Fix subtitles extraction (#13628, #13629)
+* [vine] Make sure the title won't be empty
++ [twitter] Support HLS streams in vmap URLs
++ [periscope] Support pscp.tv URLs in embedded frames
+* [twitter] Extract mp4 urls via mobile API (#12726)
+* [niconico] Fix authentication error handling (#12486)
+* [giantbomb] Extract m3u8 formats (#13626)
++ [vlive:playlist] Add support for playlists (#13613)
+
+
+version 2017.07.09
+
+Core
++ [extractor/common] Add support for AMP tags in _parse_html5_media_entries
++ [utils] Support attributes with no values in get_elements_by_attribute
+
+Extractors
++ [dailymail] Add support for embeds
++ [joj] Add support for joj.sk (#13268)
+* [abc.net.au:iview] Extract more formats (#13492, #13489)
+* [egghead:course] Fix extraction (#6635, #13370)
++ [cjsw] Add support for cjsw.com (#13525)
++ [eagleplatform] Add support for referrer protected videos (#13557)
++ [eagleplatform] Add support for another embed pattern (#13557)
+* [veoh] Extend URL regular expression (#13601)
+* [npo:live] Fix live stream id extraction (#13568, #13605)
+* [googledrive] Fix height extraction (#13603)
++ [dailymotion] Add support for new layout (#13580)
+- [yam] Remove extractor
+* [xhamster] Extract all formats and fix duration extraction (#13593)
++ [xhamster] Add support for new URL schema (#13593)
+* [espn] Extend URL regular expression (#13244, #13549)
+* [kaltura] Fix typo in subtitles extraction (#13569)
+* [vier] Adapt extraction to redesign (#13575)
+
+
+version 2017.07.02
+
+Core
+* [extractor/common] Improve _json_ld
+
+Extractors
++ [thisoldhouse] Add more fallbacks for video id
+* [thisoldhouse] Fix video id extraction (#13540, #13541)
+* [xfileshare] Extend format regular expression (#13536)
+* [ted] Fix extraction (#13535)
++ [tastytrade] Add support for tastytrade.com (#13521)
+* [dplayit] Relax video id regular expression (#13524)
++ [generic] Extract more generic metadata (#13527)
++ [bbccouk] Capture and output error message (#13501, #13518)
+* [cbsnews] Relax video info regular expression (#13284, #13503)
++ [facebook] Add support for plugin video embeds and multiple embeds (#13493)
+* [soundcloud] Switch to https for API requests (#13502)
+* [pandatv] Switch to https for API and download URLs
++ [pandatv] Add support for https URLs (#13491)
++ [niconico] Support sp subdomain (#13494)
+
+
+version 2017.06.25
+
+Core
++ [adobepass] Add support for DIRECTV NOW (mso ATTOTT) (#13472)
+* [YoutubeDL] Skip malformed formats for better extraction robustness
+
+Extractors
++ [wsj] Add support for barrons.com (#13470)
++ [ign] Add another video id pattern (#13328)
++ [raiplay:live] Add support for live streams (#13414)
++ [redbulltv] Add support for live videos and segments (#13486)
++ [onetpl] Add support for videos embedded via pulsembed (#13482)
+* [ooyala] Make more robust
+* [ooyala] Skip empty format URLs (#13471, #13476)
+* [hgtv.com:show] Fix typo
+
+
+version 2017.06.23
+
+Core
+* [adobepass] Fix extraction on older python 2.6
+
+Extractors
+* [youtube] Adapt to new automatic captions rendition (#13467)
+* [hgtv.com:show] Relax video config regular expression (#13279, #13461)
+* [drtuber] Fix formats extraction (#12058)
+* [youporn] Fix upload date extraction
+* [youporn] Improve formats extraction
+* [youporn] Fix title extraction (#13456)
+* [googledrive] Fix formats sorting (#13443)
+* [watchindianporn] Fix extraction (#13411, #13415)
++ [vimeo] Add fallback mp4 extension for original format
++ [ruv] Add support for ruv.is (#13396)
+* [viu] Fix extraction on older python 2.6
+* [pandora.tv] Fix upload_date extraction (#12846)
++ [asiancrush] Add support for asiancrush.com (#13420)
+
+
+version 2017.06.18
+
+Core
+* [downloader/common] Use utils.shell_quote for debug command line
+* [utils] Use compat_shlex_quote in shell_quote
+* [postprocessor/execafterdownload] Encode command line (#13407)
+* [compat] Fix compat_shlex_quote on Windows (#5889, #10254)
+* [postprocessor/metadatafromtitle] Fix missing optional meta fields processing
+   in --metadata-from-title (#13408)
+* [extractor/common] Fix json dumping with --geo-bypass
++ [extractor/common] Improve jwplayer subtitles extraction
++ [extractor/common] Improve jwplayer formats extraction (#13379)
+
+Extractors
+* [polskieradio] Fix extraction (#13392)
++ [xfileshare] Add support for fastvideo.me (#13385)
+* [bilibili] Fix extraction of videos with double quotes in titles (#13387)
+* [4tube] Fix extraction (#13381, #13382)
++ [disney] Add support for disneychannel.de (#13383)
+* [npo] Improve URL regular expression (#13376)
++ [corus] Add support for showcase.ca
++ [corus] Add support for history.ca (#13359)
+
+
 version 2017.06.12
 
 Core

@@ -67,6 +67,8 @@
  - **arte.tv:info**
  - **arte.tv:magazine**
  - **arte.tv:playlist**
+ - **AsianCrush**
+ - **AsianCrushPlaylist**
  - **AtresPlayer**
  - **ATTTechChannel**
  - **ATVAt**
@@ -152,6 +154,7 @@
  - **chirbit**
  - **chirbit:profile**
  - **Cinchcast**
+ - **CJSW**
  - **Clipfish**
  - **cliphunter**
  - **ClipRs**
@@ -367,6 +370,7 @@
  - **Jamendo**
  - **JamendoAlbum**
  - **JeuxVideo**
+ - **Joj**
  - **Jove**
  - **jpopsuki.tv**
  - **JWPlatform**
@@ -517,6 +521,7 @@
  - **NextMedia**: 蘋果日報
  - **NextMediaActionNews**: 蘋果日報 - 動新聞
  - **NextTV**: 壹電視
+ - **Nexx**
  - **nfb**: National Film Board of Canada
  - **nfl.com**
  - **NhkVod**
@@ -642,6 +647,7 @@
  - **RadioJavan**
  - **Rai**
  - **RaiPlay**
+ - **RaiPlayLive**
  - **RBMARadio**
  - **RDS**: RDS.ca
  - **RedBullTV**
@@ -686,6 +692,7 @@
  - **rutube:person**: Rutube person videos
  - **RUTV**: RUTV.RU
  - **Ruutu**
+ - **Ruv**
  - **safari**: safaribooksonline.com online video
  - **safari:api**
  - **safari:course**: safaribooksonline.com online courses
@@ -764,6 +771,7 @@
  - **Tagesschau**
  - **tagesschau:player**
  - **Tass**
+ - **TastyTrade**
  - **TBS**
  - **TDSLifeway**
  - **teachertube**: teachertube.com videos
@@ -935,6 +943,7 @@
  - **vk:wallpost**
  - **vlive**
  - **vlive:channel**
+ - **vlive:playlist**
  - **Vodlocker**
  - **VODPl**
  - **VODPlatform**
@@ -975,7 +984,7 @@
  - **WSJArticle**
  - **XBef**
  - **XboxClips**
- - **XFileShare**: XFileShare based sites: DaClips, FileHoot, GorillaVid, MovPod, PowerWatch, Rapidvideo.ws, TheVideoBee, Vidto, Streamin.To, XVIDSTAGE, Vid ABC, VidBom, vidlo, RapidVideo.TV
+ - **XFileShare**: XFileShare based sites: DaClips, FileHoot, GorillaVid, MovPod, PowerWatch, Rapidvideo.ws, TheVideoBee, Vidto, Streamin.To, XVIDSTAGE, Vid ABC, VidBom, vidlo, RapidVideo.TV, FastVideo.me
  - **XHamster**
  - **XHamsterEmbed**
  - **xiami:album**: 虾米音乐 - 专辑
@@ -991,7 +1000,6 @@
  - **XVideos**
  - **XXXYMovies**
  - **Yahoo**: Yahoo screen and movies
- - **Yam**: 蕃薯藤yam天空部落
  - **yandexmusic:album**: Яндекс.Музыка - Альбом
  - **yandexmusic:playlist**: Яндекс.Музыка - Плейлист
  - **yandexmusic:track**: Яндекс.Музыка - Трек

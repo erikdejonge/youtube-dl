@@ -30,6 +30,7 @@ class XFileShareIE(InfoExtractor):
         (r'vidbom\.com', 'VidBom'),
         (r'vidlo\.us', 'vidlo'),
         (r'rapidvideo\.(?:cool|org)', 'RapidVideo.TV'),
+        (r'fastvideo\.me', 'FastVideo.me'),
     )
 
     IE_DESC = 'XFileShare based sites: %s' % ', '.join(list(zip(*_SITES))[1])
@@ -112,6 +113,9 @@ class XFileShareIE(InfoExtractor):
     }, {
         'url': 'http://www.rapidvideo.cool/b667kprndr8w',
         'only_matching': True,
+    }, {
+        'url': 'http://www.fastvideo.me/k8604r8nk8sn/FAST_FURIOUS_8_-_Trailer_italiano_ufficiale.mp4.html',
+        'only_matching': True
     }]
 
     def _real_extract(self, url):
@@ -153,7 +157,7 @@ class XFileShareIE(InfoExtractor):
         def extract_formats(default=NO_DEFAULT):
             urls = []
             for regex in (
-                    r'file\s*:\s*(["\'])(?P<url>http(?:(?!\1).)+\.(?:m3u8|mp4|flv)(?:(?!\1).)*)\1',
+                    r'(?:file|src)\s*:\s*(["\'])(?P<url>http(?:(?!\1).)+\.(?:m3u8|mp4|flv)(?:(?!\1).)*)\1',
                     r'file_link\s*=\s*(["\'])(?P<url>http(?:(?!\1).)+)\1',
                     r'addVariable\((\\?["\'])file\1\s*,\s*(\\?["\'])(?P<url>http(?:(?!\2).)+)\2\)',
                     r'<embed[^>]+src=(["\'])(?P<url>http(?:(?!\1).)+\.(?:m3u8|mp4|flv)(?:(?!\1).)*)\1'):

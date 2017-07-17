@@ -26,6 +26,8 @@ import tokenize
 import traceback
 import random
 
+from string import ascii_letters
+
 from .compat import (
     compat_basestring,
     compat_cookiejar,
@@ -674,7 +676,19 @@ class YoutubeDL(object):
                         FORMAT_RE.format(numeric_field),
                         r'%({0})s'.format(numeric_field), outtmpl)
 
-            filename = expand_path(outtmpl % template_dict)
+            # expand_path translates '%%' into '%' and '$$' into '$'
+            # correspondingly that is not what we want since we need to keep
+            # '%%' intact for template dict substitution step. Working around
+            # with boundary-alike separator hack.
+            sep = ''.join([random.choice(ascii_letters) for _ in range(32)])
+            outtmpl = outtmpl.replace('%%', '%{0}%'.format(sep)).replace('$$', '${0}$'.format(sep))
+
+            # outtmpl should be expand_path'ed before template dict substitution
+            # because meta fields may contain env variables we don't want to
+            # be expanded. For example, for outtmpl "%(title)s.%(ext)s" and
+            # title "Hello $PATH", we don't want `$PATH` to be expanded.
+            filename = expand_path(outtmpl).replace(sep, '') % template_dict
+
             # Temporary fix for #4787
             # 'Treat' all problem characters by passing filename through preferredencoding
             # to workaround encoding issues with subprocess on python2 @ Windows
@@ -1448,17 +1462,25 @@ class YoutubeDL(object):
         if not formats:
             raise ExtractorError('No video formats found!')
 
+        def is_wellformed(f):
+            url = f.get('url')
+            valid_url = url and isinstance(url, compat_str)
+            if not valid_url:
+                self.report_warning(
+                    '"url" field is missing or empty - skipping format, '
+                    'there is an error in extractor')
+            return valid_url
+
+        # Filter out malformed formats for better extraction robustness
+        formats = list(filter(is_wellformed, formats))
+
         formats_dict = {}
 
         # We check that all the formats have the format and format_id fields
         for i, format in enumerate(formats):
-            if 'url' not in format:
-                raise ExtractorError('Missing "url" key in result (index %d)' % i)
-
             sanitize_string_field(format, 'format_id')
             sanitize_numeric_fields(format)
             format['url'] = sanitize_url(format['url'])
-
             if format.get('format_id') is None:
                 format['format_id'] = compat_str(i)
             else:
@@ -1882,7 +1904,7 @@ class YoutubeDL(object):
                         info_dict.get('protocol') == 'm3u8' and
                         self.params.get('hls_prefer_native')):
                     if fixup_policy == 'warn':
-                        self.report_warning('%s: malformated aac bitstream.' % (
+                        self.report_warning('%s: malformed AAC bitstream detected.' % (
                             info_dict['id']))
                     elif fixup_policy == 'detect_or_warn':
                         fixup_pp = FFmpegFixupM3u8PP(self)
@@ -1891,7 +1913,7 @@ class YoutubeDL(object):
                             info_dict['__postprocessors'].append(fixup_pp)
                         else:
                             self.report_warning(
-                                '%s: malformated aac bitstream. %s'
+                                '%s: malformed AAC bitstream detected. %s'
                                 % (info_dict['id'], INSTALL_FFMPEG_MESSAGE))
                     else:
                         assert fixup_policy in ('ignore', 'never')
