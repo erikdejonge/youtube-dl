@@ -23,6 +23,7 @@ cover/
 updates_key.pem
 *.egg-info
 *.srt
+*.ttml
 *.sbv
 *.vtt
 *.flv

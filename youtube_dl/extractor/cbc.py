@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
 
+import json
 import re
 
 from .common import InfoExtractor
@@ -13,6 +14,7 @@ from ..utils import (
     xpath_element,
     xpath_with_ns,
     find_xpath_attr,
+    parse_duration,
     parse_iso8601,
     parse_age_limit,
     int_or_none,
@@ -200,6 +202,7 @@ class CBCWatchBaseIE(InfoExtractor):
         'media': 'http://search.yahoo.com/mrss/',
         'clearleap': 'http://www.clearleap.com/namespace/clearleap/1.0/',
     }
+    _GEO_COUNTRIES = ['CA']
 
     def _call_api(self, path, video_id):
         url = path if path.startswith('http') else self._API_BASE_URL + path
@@ -287,6 +290,11 @@ class CBCWatchBaseIE(InfoExtractor):
 class CBCWatchVideoIE(CBCWatchBaseIE):
     IE_NAME = 'cbc.ca:watch:video'
     _VALID_URL = r'https?://api-cbc\.cloud\.clearleap\.com/cloffice/client/web/play/?\?.*?\bcontentId=(?P<id>[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12})'
+    _TEST = {
+        # geo-restricted to Canada, bypassable
+        'url': 'https://api-cbc.cloud.clearleap.com/cloffice/client/web/play/?contentId=3c84472a-1eea-4dee-9267-2655d5055dcf&categoryId=ebc258f5-ee40-4cca-b66b-ba6bd55b7235',
+        'only_matching': True,
+    }
 
     def _real_extract(self, url):
         video_id = self._match_id(url)
@@ -323,9 +331,10 @@ class CBCWatchIE(CBCWatchBaseIE):
     IE_NAME = 'cbc.ca:watch'
     _VALID_URL = r'https?://watch\.cbc\.ca/(?:[^/]+/)+(?P<id>[0-9a-f-]+)'
     _TESTS = [{
+        # geo-restricted to Canada, bypassable
         'url': 'http://watch.cbc.ca/doc-zone/season-6/customer-disservice/38e815a-009e3ab12e4',
         'info_dict': {
-            'id': '38e815a-009e3ab12e4',
+            'id': '9673749a-5e77-484c-8b62-a1092a6b5168',
             'ext': 'mp4',
             'title': 'Customer (Dis)Service',
             'description': 'md5:8bdd6913a0fe03d4b2a17ebe169c7c87',
@@ -337,8 +346,8 @@ class CBCWatchIE(CBCWatchBaseIE):
             'skip_download': True,
             'format': 'bestvideo',
         },
-        'skip': 'Geo-restricted to Canada',
     }, {
+        # geo-restricted to Canada, bypassable
         'url': 'http://watch.cbc.ca/arthur/all/1ed4b385-cd84-49cf-95f0-80f004680057',
         'info_dict': {
             'id': '1ed4b385-cd84-49cf-95f0-80f004680057',
@@ -346,10 +355,69 @@ class CBCWatchIE(CBCWatchBaseIE):
             'description': 'Arthur, the sweetest 8-year-old aardvark, and his pals solve all kinds of problems with humour, kindness and teamwork.',
         },
         'playlist_mincount': 30,
-        'skip': 'Geo-restricted to Canada',
     }]
 
     def _real_extract(self, url):
         video_id = self._match_id(url)
         rss = self._call_api('web/browse/' + video_id, video_id)
         return self._parse_rss_feed(rss)
+
+
+class CBCOlympicsIE(InfoExtractor):
+    IE_NAME = 'cbc.ca:olympics'
+    _VALID_URL = r'https?://olympics\.cbc\.ca/video/[^/]+/(?P<id>[^/?#]+)'
+    _TESTS = [{
+        'url': 'https://olympics.cbc.ca/video/whats-on-tv/olympic-morning-featuring-the-opening-ceremony/',
+        'only_matching': True,
+    }]
+
+    def _real_extract(self, url):
+        display_id = self._match_id(url)
+        webpage = self._download_webpage(url, display_id)
+        video_id = self._hidden_inputs(webpage)['videoId']
+        video_doc = self._download_xml(
+            'https://olympics.cbc.ca/videodata/%s.xml' % video_id, video_id)
+        title = xpath_text(video_doc, 'title', fatal=True)
+        is_live = xpath_text(video_doc, 'kind') == 'Live'
+        if is_live:
+            title = self._live_title(title)
+
+        formats = []
+        for video_source in video_doc.findall('videoSources/videoSource'):
+            uri = xpath_text(video_source, 'uri')
+            if not uri:
+                continue
+            tokenize = self._download_json(
+                'https://olympics.cbc.ca/api/api-akamai/tokenize',
+                video_id, data=json.dumps({
+                    'VideoSource': uri,
+                }).encode(), headers={
+                    'Content-Type': 'application/json',
+                    'Referer': url,
+                    # d3.VideoPlayer._init in https://olympics.cbc.ca/components/script/base.js
+                    'Cookie': '_dvp=TK:C0ObxjerU',  # AKAMAI CDN cookie
+                }, fatal=False)
+            if not tokenize:
+                continue
+            content_url = tokenize['ContentUrl']
+            video_source_format = video_source.get('format')
+            if video_source_format == 'IIS':
+                formats.extend(self._extract_ism_formats(
+                    content_url, video_id, ism_id=video_source_format, fatal=False))
+            else:
+                formats.extend(self._extract_m3u8_formats(
+                    content_url, video_id, 'mp4',
+                    'm3u8' if is_live else 'm3u8_native',
+                    m3u8_id=video_source_format, fatal=False))
+        self._sort_formats(formats)
+
+        return {
+            'id': video_id,
+            'display_id': display_id,
+            'title': title,
+            'description': xpath_text(video_doc, 'description'),
+            'thumbnail': xpath_text(video_doc, 'thumbnailUrl'),
+            'duration': parse_duration(xpath_text(video_doc, 'duration')),
+            'formats': formats,
+            'is_live': is_live,
+        }

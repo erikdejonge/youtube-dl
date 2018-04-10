@@ -28,7 +28,7 @@ from ..utils import (
 
 
 class TwitchBaseIE(InfoExtractor):
-    _VALID_URL_BASE = r'https?://(?:www\.)?twitch\.tv'
+    _VALID_URL_BASE = r'https?://(?:(?:www|go)\.)?twitch\.tv'
 
     _API_BASE = 'https://api.twitch.tv'
     _USHER_BASE = 'https://usher.ttvnw.net'
@@ -85,10 +85,15 @@ class TwitchBaseIE(InfoExtractor):
                 if isinstance(e.cause, compat_HTTPError) and e.cause.code == 400:
                     response = self._parse_json(
                         e.cause.read().decode('utf-8'), None)
-                    fail(response['message'])
+                    fail(response.get('message') or response['errors'][0])
                 raise
 
-            redirect_url = urljoin(post_url, response['redirect'])
+            if 'Authenticated successfully' in response.get('message', ''):
+                return None, None
+
+            redirect_url = urljoin(
+                post_url,
+                response.get('redirect') or response['redirect_path'])
             return self._download_webpage_handle(
                 redirect_url, None, 'Downloading login redirect page',
                 headers=headers)
@@ -101,10 +106,14 @@ class TwitchBaseIE(InfoExtractor):
             fail(clean_html(login_page))
 
         redirect_page, handle = login_step(
-            login_page, handle, 'Logging in as %s' % username, {
+            login_page, handle, 'Logging in', {
                 'username': username,
                 'password': password,
             })
+
+        # Successful login
+        if not redirect_page:
+            return
 
         if re.search(r'(?i)<form[^>]+id="two-factor-submit"', redirect_page) is not None:
             # TODO: Add mechanism to request an SMS or phone call
@@ -217,7 +226,7 @@ class TwitchVodIE(TwitchItemBaseIE):
     _VALID_URL = r'''(?x)
                     https?://
                         (?:
-                            (?:www\.)?twitch\.tv/(?:[^/]+/v|videos)/|
+                            (?:(?:www|go)\.)?twitch\.tv/(?:[^/]+/v|videos)/|
                             player\.twitch\.tv/\?.*?\bvideo=v
                         )
                         (?P<id>\d+)
@@ -358,8 +367,15 @@ class TwitchPlaylistBaseIE(TwitchBaseIE):
                 break
             offset += limit
         return self.playlist_result(
-            [self.url_result(entry) for entry in orderedSet(entries)],
+            [self._make_url_result(entry) for entry in orderedSet(entries)],
             channel_id, channel_name)
+
+    def _make_url_result(self, url):
+        try:
+            video_id = 'v%s' % TwitchVodIE._match_id(url)
+            return self.url_result(url, TwitchVodIE.ie_key(), video_id=video_id)
+        except AssertionError:
+            return self.url_result(url)
 
     def _extract_playlist_page(self, response):
         videos = response.get('videos')
@@ -458,7 +474,7 @@ class TwitchStreamIE(TwitchBaseIE):
     _VALID_URL = r'''(?x)
                     https?://
                         (?:
-                            (?:www\.)?twitch\.tv/|
+                            (?:(?:www|go)\.)?twitch\.tv/|
                             player\.twitch\.tv/\?.*?\bchannel=
                         )
                         (?P<id>[^/#?]+)
@@ -488,6 +504,9 @@ class TwitchStreamIE(TwitchBaseIE):
         'only_matching': True,
     }, {
         'url': 'https://player.twitch.tv/?channel=lotsofs',
+        'only_matching': True,
+    }, {
+        'url': 'https://go.twitch.tv/food',
         'only_matching': True,
     }]
 
@@ -606,7 +625,7 @@ class TwitchClipsIE(InfoExtractor):
                 r'(?s)clipInfo\s*=\s*({.+?});', webpage, 'clip info'),
             video_id, transform_source=js_to_json)
 
-        title = clip.get('channel_title') or self._og_search_title(webpage)
+        title = clip.get('title') or clip.get('channel_title') or self._og_search_title(webpage)
 
         formats = [{
             'url': option['source'],
