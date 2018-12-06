@@ -15,7 +15,6 @@
  - **8tracks**
  - **91porn**
  - **9c9media**
- - **9c9media:stack**
  - **9gag**
  - **9now.com.au**
  - **abc.net.au**
@@ -48,6 +47,7 @@
  - **anitube.se**
  - **Anvato**
  - **AnySex**
+ - **APA**
  - **Aparat**
  - **AppleConnect**
  - **AppleDaily**: 臺灣蘋果日報
@@ -56,6 +56,7 @@
  - **archive.org**: archive.org videos
  - **ARD**
  - **ARD:mediathek**
+ - **ARDBetaMediathek**
  - **Arkena**
  - **arte.tv**
  - **arte.tv:+7**
@@ -83,8 +84,6 @@
  - **awaan:season**
  - **awaan:video**
  - **AZMedien**: AZ Medien videos
- - **AZMedienPlaylist**: AZ Medien playlists
- - **AZMedienShowPlaylist**: AZ Medien show playlists
  - **BaiduVideo**: 百度视频
  - **bambuser**
  - **bambuser:channel**
@@ -97,9 +96,11 @@
  - **bbc.co.uk:article**: BBC articles
  - **bbc.co.uk:iplayer:playlist**
  - **bbc.co.uk:playlist**
+ - **BBVTV**
  - **Beatport**
  - **Beeg**
  - **BehindKink**
+ - **Bellator**
  - **BellMedia**
  - **Bet**
  - **Bigflix**
@@ -107,6 +108,8 @@
  - **BiliBili**
  - **BioBioChileTV**
  - **BIQLE**
+ - **BitChute**
+ - **BitChuteChannel**
  - **BleacherReport**
  - **BleacherReportCMS**
  - **blinkx**
@@ -122,10 +125,13 @@
  - **BRMediathek**: Bayerischer Rundfunk Mediathek
  - **bt:article**: Bergens Tidende Articles
  - **bt:vestlendingen**: Bergens Tidende - Vestlendingen
+ - **BusinessInsider**
  - **BuzzFeed**
  - **BYUtv**
  - **Camdemy**
  - **CamdemyFolder**
+ - **CamModels**
+ - **CamTube**
  - **CamWithHer**
  - **canalc2.tv**
  - **Canalplus**: mycanal.fr and piwiplus.fr
@@ -157,18 +163,22 @@
  - **chirbit**
  - **chirbit:profile**
  - **Cinchcast**
+ - **CiscoLiveSearch**
+ - **CiscoLiveSession**
  - **CJSW**
  - **cliphunter**
  - **Clippit**
  - **ClipRs**
  - **Clipsyndicate**
  - **CloserToTruth**
+ - **CloudflareStream**
  - **cloudtime**: CloudTime
  - **Cloudy**
  - **Clubic**
  - **Clyp**
  - **cmt.com**
  - **CNBC**
+ - **CNBCVideo**
  - **CNN**
  - **CNNArticle**
  - **CNNBlogs**
@@ -184,7 +194,7 @@
  - **Crackle**
  - **Criterion**
  - **CrooksAndLiars**
- - **Crunchyroll**
+ - **crunchyroll**
  - **crunchyroll:playlist**
  - **CSNNE**
  - **CSpan**: C-SPAN
@@ -232,6 +242,7 @@
  - **DrTuber**
  - **drtv**
  - **drtv:live**
+ - **DTube**
  - **Dumpert**
  - **dvtv**: http://video.aktualne.cz/
  - **dw**
@@ -241,7 +252,9 @@
  - **EchoMsk**
  - **egghead:course**: egghead.io course
  - **egghead:lesson**: egghead.io lesson
+ - **ehftv**
  - **eHow**
+ - **EinsUndEinsTV**
  - **Einthusan**
  - **eitb.tv**
  - **EllenTube**
@@ -259,7 +272,9 @@
  - **EsriVideo**
  - **Europa**
  - **EveryonesMixtape**
+ - **EWETV**
  - **ExpoTV**
+ - **Expressen**
  - **ExtremeTube**
  - **EyedoTV**
  - **facebook**
@@ -283,7 +298,6 @@
  - **Foxgay**
  - **foxnews**: Fox News and Fox Business Video
  - **foxnews:article**
- - **foxnews:insider**
  - **FoxSports**
  - **france2.fr:generation-what**
  - **FranceCulture**
@@ -296,6 +310,9 @@
  - **Freesound**
  - **freespeech.org**
  - **FreshLive**
+ - **FrontendMasters**
+ - **FrontendMastersCourse**
+ - **FrontendMastersLesson**
  - **Funimation**
  - **FunkChannel**
  - **FunkMix**
@@ -315,6 +332,7 @@
  - **Gfycat**
  - **GiantBomb**
  - **Giga**
+ - **GlattvisionTV**
  - **Glide**: Glide mobile video messages (glide.me)
  - **Globo**
  - **GloboArticle**
@@ -344,7 +362,7 @@
  - **HitRecord**
  - **HornBunny**
  - **HotNewHipHop**
- - **HotStar**
+ - **hotstar**
  - **hotstar:playlist**
  - **Howcast**
  - **HowStuffWorks**
@@ -361,7 +379,6 @@
  - **ImgurAlbum**
  - **Ina**
  - **Inc**
- - **Indavideo**
  - **IndavideoEmbed**
  - **InfoQ**
  - **Instagram**
@@ -373,6 +390,7 @@
  - **Ir90Tv**
  - **ITTF**
  - **ITV**
+ - **ITVBTCC**
  - **ivi**: ivi.ru
  - **ivi:compilation**: ivi.ru compilations
  - **ivideon**: Ivideon TV
@@ -396,6 +414,7 @@
  - **Ketnet**
  - **KhanAcademy**
  - **KickStarter**
+ - **KinoPoisk**
  - **KonserthusetPlay**
  - **kontrtube**: KontrTube.ru - Труба зовёт
  - **KrasView**: Красвью
@@ -428,6 +447,8 @@
  - **limelight:channel**
  - **limelight:channel_list**
  - **LineTV**
+ - **linkedin:learning**
+ - **linkedin:learning:course**
  - **LiTV**
  - **LiveLeak**
  - **LiveLeakEmbed**
@@ -445,11 +466,12 @@
  - **mailru**: Видео@Mail.Ru
  - **mailru:music**: Музыка@Mail.Ru
  - **mailru:music:search**: Музыка@Mail.Ru
- - **MakersChannel**
  - **MakerTV**
  - **mangomolo:live**
  - **mangomolo:video**
  - **ManyVids**
+ - **Markiza**
+ - **MarkizaPage**
  - **massengeschmack.tv**
  - **MatchTV**
  - **MDR**: MDR.DE and KiKA
@@ -480,10 +502,10 @@
  - **Mixer:vod**
  - **MLB**
  - **Mnet**
+ - **MNetTV**
  - **MoeVideo**: LetitBit video services: moevideo.net, playreplay.net and videochart.net
  - **Mofosex**
  - **Mojvideo**
- - **Moniker**: allmyvideos.net and vidspot.net
  - **Morningstar**: morningstar.com
  - **Motherless**
  - **MotherlessGroup**
@@ -505,12 +527,14 @@
  - **mva:course**: Microsoft Virtual Academy courses
  - **Mwave**
  - **MwaveMeetGreet**
+ - **MyChannels**
  - **MySpace**
  - **MySpace:album**
  - **MySpass**
  - **Myvi**
  - **MyVidster**
  - **MyviEmbed**
+ - **MyVisionTV**
  - **n-tv.de**
  - **natgeo**
  - **natgeo:episodeguide**
@@ -522,6 +546,7 @@
  - **nbcolympics**
  - **nbcolympics:stream**
  - **NBCSports**
+ - **NBCSportsStream**
  - **NBCSportsVPlayer**
  - **ndr**: NDR.de - Norddeutscher Rundfunk
  - **ndr:embed**
@@ -535,6 +560,7 @@
  - **netease:program**: 网易云音乐 - 电台节目
  - **netease:singer**: 网易云音乐 - 歌手
  - **netease:song**: 网易云音乐
+ - **NetPlus**
  - **Netzkino**
  - **Newgrounds**
  - **NewgroundsPlaylist**
@@ -548,9 +574,6 @@
  - **nfl.com**
  - **NhkVod**
  - **nhl.com**
- - **nhl.com:news**: NHL news
- - **nhl.com:videocenter**
- - **nhl.com:videocenter:category**: NHL videocenter category
  - **nick.com**
  - **nick.de**
  - **nickelodeon:br**
@@ -569,6 +592,7 @@
  - **Normalboots**
  - **NosVideo**
  - **Nova**: TN.cz, Prásk.tv, Nova.cz, Novaplus.cz, FANDA.tv, Krásná.cz and Doma.cz
+ - **NovaEmbed**
  - **nowness**
  - **nowness:playlist**
  - **nowness:series**
@@ -584,7 +608,9 @@
  - **NRKSkole**: NRK Skole
  - **NRKTV**: NRK TV and NRK Radio
  - **NRKTVDirekte**: NRK TV Direkte and NRK Radio Direkte
+ - **NRKTVEpisode**
  - **NRKTVEpisodes**
+ - **NRKTVSeason**
  - **NRKTVSeries**
  - **ntv.ru**
  - **Nuvid**
@@ -611,15 +637,18 @@
  - **orf:iptv**: iptv.ORF.at
  - **orf:oe1**: Radio Österreich 1
  - **orf:tvthek**: ORF TVthek
+ - **OsnatelTV**
  - **PacktPub**
  - **PacktPubCourse**
  - **PandaTV**: 熊猫TV
  - **pandora.tv**: 판도라TV
+ - **ParamountNetwork**
  - **parliamentlive.tv**: UK parliament videos
  - **Patreon**
  - **pbs**: Public Broadcasting Service (PBS) and member stations: PBS: Public Broadcasting Service, APT - Alabama Public Television (WBIQ), GPB/Georgia Public Broadcasting (WGTV), Mississippi Public Broadcasting (WMPN), Nashville Public Television (WNPT), WFSU-TV (WFSU), WSRE (WSRE), WTCI (WTCI), WPBA/Channel 30 (WPBA), Alaska Public Media (KAKM), Arizona PBS (KAET), KNME-TV/Channel 5 (KNME), Vegas PBS (KLVX), AETN/ARKANSAS ETV NETWORK (KETS), KET (WKLE), WKNO/Channel 10 (WKNO), LPB/LOUISIANA PUBLIC BROADCASTING (WLPB), OETA (KETA), Ozarks Public Television (KOZK), WSIU Public Broadcasting (WSIU), KEET TV (KEET), KIXE/Channel 9 (KIXE), KPBS San Diego (KPBS), KQED (KQED), KVIE Public Television (KVIE), PBS SoCal/KOCE (KOCE), ValleyPBS (KVPT), CONNECTICUT PUBLIC TELEVISION (WEDH), KNPB Channel 5 (KNPB), SOPTV (KSYS), Rocky Mountain PBS (KRMA), KENW-TV3 (KENW), KUED Channel 7 (KUED), Wyoming PBS (KCWC), Colorado Public Television / KBDI 12 (KBDI), KBYU-TV (KBYU), Thirteen/WNET New York (WNET), WGBH/Channel 2 (WGBH), WGBY (WGBY), NJTV Public Media NJ (WNJT), WLIW21 (WLIW), mpt/Maryland Public Television (WMPB), WETA Television and Radio (WETA), WHYY (WHYY), PBS 39 (WLVT), WVPT - Your Source for PBS and More! (WVPT), Howard University Television (WHUT), WEDU PBS (WEDU), WGCU Public Media (WGCU), WPBT2 (WPBT), WUCF TV (WUCF), WUFT/Channel 5 (WUFT), WXEL/Channel 42 (WXEL), WLRN/Channel 17 (WLRN), WUSF Public Broadcasting (WUSF), ETV (WRLK), UNC-TV (WUNC), PBS Hawaii - Oceanic Cable Channel 10 (KHET), Idaho Public Television (KAID), KSPS (KSPS), OPB (KOPB), KWSU/Channel 10 & KTNW/Channel 31 (KWSU), WILL-TV (WILL), Network Knowledge - WSEC/Springfield (WSEC), WTTW11 (WTTW), Iowa Public Television/IPTV (KDIN), Nine Network (KETC), PBS39 Fort Wayne (WFWA), WFYI Indianapolis (WFYI), Milwaukee Public Television (WMVS), WNIN (WNIN), WNIT Public Television (WNIT), WPT (WPNE), WVUT/Channel 22 (WVUT), WEIU/Channel 51 (WEIU), WQPT-TV (WQPT), WYCC PBS Chicago (WYCC), WIPB-TV (WIPB), WTIU (WTIU), CET  (WCET), ThinkTVNetwork (WPTD), WBGU-TV (WBGU), WGVU TV (WGVU), NET1 (KUON), Pioneer Public Television (KWCM), SDPB Television (KUSD), TPT (KTCA), KSMQ (KSMQ), KPTS/Channel 8 (KPTS), KTWU/Channel 11 (KTWU), East Tennessee PBS (WSJK), WCTE-TV (WCTE), WLJT, Channel 11 (WLJT), WOSU TV (WOSU), WOUB/WOUC (WOUB), WVPB (WVPB), WKYU-PBS (WKYU), KERA 13 (KERA), MPBN (WCBB), Mountain Lake PBS (WCFE), NHPTV (WENH), Vermont PBS (WETK), witf (WITF), WQED Multimedia (WQED), WMHT Educational Telecommunications (WMHT), Q-TV (WDCQ), WTVS Detroit Public TV (WTVS), CMU Public Television (WCMU), WKAR-TV (WKAR), WNMU-TV Public TV 13 (WNMU), WDSE - WRPT (WDSE), WGTE TV (WGTE), Lakeland Public Television (KAWE), KMOS-TV - Channels 6.1, 6.2 and 6.3 (KMOS), MontanaPBS (KUSM), KRWG/Channel 22 (KRWG), KACV (KACV), KCOS/Channel 13 (KCOS), WCNY/Channel 24 (WCNY), WNED (WNED), WPBS (WPBS), WSKG Public TV (WSKG), WXXI (WXXI), WPSU (WPSU), WVIA Public Media Studios (WVIA), WTVI (WTVI), Western Reserve PBS (WNEO), WVIZ/PBS ideastream (WVIZ), KCTS 9 (KCTS), Basin PBS (KPBT), KUHT / Channel 8 (KUHT), KLRN (KLRN), KLRU (KLRU), WTJX Channel 12 (WTJX), WCVE PBS (WCVE), KBTC Public Television (KBTC)
  - **pcmag**
  - **PearVideo**
+ - **PeerTube**
  - **People**
  - **PerformGroup**
  - **periscope**: Periscope
@@ -660,6 +689,8 @@
  - **PrimeShareTV**
  - **PromptFile**
  - **prosiebensat1**: ProSiebenSat.1 Digital
+ - **puhutv**
+ - **puhutv:serie**
  - **Puls4**
  - **Pyvideo**
  - **qqmusic**: QQ音乐
@@ -667,6 +698,9 @@
  - **qqmusic:playlist**: QQ音乐 - 歌单
  - **qqmusic:singer**: QQ音乐 - 歌手
  - **qqmusic:toplist**: QQ音乐 - 排行榜
+ - **QuantumTV**
+ - **Quickline**
+ - **QuicklineLive**
  - **R7**
  - **R7Article**
  - **radio.de**
@@ -680,6 +714,7 @@
  - **RaiPlayLive**
  - **RaiPlayPlaylist**
  - **RayWenderlich**
+ - **RayWenderlichCourse**
  - **RBMARadio**
  - **RDS**: RDS.ca
  - **RedBullTV**
@@ -731,6 +766,7 @@
  - **safari**: safaribooksonline.com online video
  - **safari:api**
  - **safari:course**: safaribooksonline.com online courses
+ - **SAKTV**
  - **Sapo**: SAPO Vídeos
  - **savefrom.net**
  - **SBS**: sbs.com.au
@@ -784,9 +820,9 @@
  - **Spiegel**
  - **Spiegel:Article**: Articles on spiegel.de
  - **Spiegeltv**
- - **Spike**
+ - **sport.francetvinfo.fr**
  - **Sport5**
- - **SportBoxEmbed**
+ - **SportBox**
  - **SportDeutschland**
  - **SpringboardPlatform**
  - **Sprout**
@@ -804,6 +840,7 @@
  - **StretchInternet**
  - **SunPorno**
  - **SVT**
+ - **SVTPage**
  - **SVTPlay**: SVT Play and Öppet arkiv
  - **SVTSeries**
  - **SWRMediathek**
@@ -824,6 +861,7 @@
  - **techtv.mit.edu**
  - **ted**
  - **Tele13**
+ - **Tele5**
  - **TeleBruxelles**
  - **Telecinco**: telecinco.es, cuatro.com and mediaset.es
  - **Telegraaf**
@@ -847,6 +885,8 @@
  - **ThisAmericanLife**
  - **ThisAV**
  - **ThisOldHouse**
+ - **TikTok**
+ - **TikTokUser**
  - **tinypic**: tinypic.com videos
  - **TMZ**
  - **TMZArticle**
@@ -875,7 +915,6 @@
  - **TV2**
  - **tv2.hu**
  - **TV2Article**
- - **TV3**
  - **TV4**: tv4.se and tv4play.se
  - **TV5MondePlus**: TV5MONDE+
  - **TVA**
@@ -886,6 +925,7 @@
  - **tvigle**: Интернет-телевидение Tvigle.ru
  - **tvland.com**
  - **TVN24**
+ - **TVNet**
  - **TVNoe**
  - **TVNow**
  - **TVNowList**
@@ -894,7 +934,9 @@
  - **tvp:embed**: Telewizja Polska
  - **tvp:series**
  - **TVPlayer**
+ - **TVPlayHome**
  - **Tweakers**
+ - **TwitCasting**
  - **twitch:chapter**
  - **twitch:clips**
  - **twitch:profile**
@@ -939,6 +981,7 @@
  - **VevoPlaylist**
  - **VGTV**: VGTV, BTTV, FTV, Aftenposten and Aftonbladet
  - **vh1.com**
+ - **vhx:embed**
  - **Viafree**
  - **vice**
  - **vice:article**
@@ -983,6 +1026,7 @@
  - **Vimple**: Vimple - one-click video hosting
  - **Vine**
  - **vine:user**
+ - **Viqeo**
  - **Viu**
  - **viu:ott**
  - **viu:playlist**
@@ -1008,12 +1052,14 @@
  - **vrv**
  - **vrv:series**
  - **VShare**
+ - **VTXTV**
  - **vube**: Vube.com
  - **VuClip**
  - **VVVVID**
  - **VyboryMos**
  - **Vzaar**
  - **Walla**
+ - **WalyTV**
  - **washingtonpost**
  - **washingtonpost:article**
  - **wat.tv**
@@ -1039,6 +1085,7 @@
  - **wrzuta.pl:playlist**
  - **WSJ**: Wall Street Journal
  - **WSJArticle**
+ - **WWE**
  - **XBef**
  - **XboxClips**
  - **XFileShare**: XFileShare based sites: DaClips, FileHoot, GorillaVid, MovPod, PowerWatch, Rapidvideo.ws, TheVideoBee, Vidto, Streamin.To, XVIDSTAGE, Vid ABC, VidBom, vidlo, RapidVideo.TV, FastVideo.me
@@ -1074,6 +1121,7 @@
  - **YouNowLive**
  - **YouNowMoment**
  - **YouPorn**
+ - **YourPorn**
  - **YourUpload**
  - **youtube**: YouTube.com
  - **youtube:channel**: YouTube.com channels
@@ -1092,6 +1140,9 @@
  - **youtube:watchlater**: Youtube watch later list, ":ytwatchlater" for short (requires authentication)
  - **Zapiks**
  - **Zaq1**
+ - **Zattoo**
+ - **ZattooLive**
  - **ZDF**
  - **ZDFChannel**
  - **zingmp3**: mp3.zing.vn
+ - **Zype**
